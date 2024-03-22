@@ -32,8 +32,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-maven-plugin</artifactId>
-			<version>10.7.1</version>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
@@ -53,6 +56,11 @@
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 				<version>10.7.1</version>
+				<configuration>
+					<url>jdbc:h2:mem:database</url>
+					<user>sa</user>
+					<password></password>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
