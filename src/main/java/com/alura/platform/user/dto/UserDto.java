@@ -1,6 +1,8 @@
 package com.alura.platform.user.dto;
 
+import com.alura.platform.user.entity.User;
 import com.alura.platform.user.enums.UserRoleEnum;
+import com.alura.platform.user.projections.UserNameEmailRoleProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -29,4 +31,8 @@ public record UserDto(
 
         @Schema(example = "STUDENT")
         UserRoleEnum role) {
+
+        public UserDto(User user) {
+                this(user.getName(), user.getUsername(), user.getEmail(), user.getPassword(), user.getRole());
+        }
 }

@@ -47,6 +47,34 @@ public class User {
 
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public UserRoleEnum getRole() {
+        return role;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

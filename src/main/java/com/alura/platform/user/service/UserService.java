@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -20,6 +22,10 @@ public class UserService {
     public User save(UserDto userDto) {
         User user = new User(userDto);
         return userRepository.save(user);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     public UserNameEmailRoleDto findByUsername(String username) {
