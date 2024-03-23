@@ -1,4 +1,4 @@
-package com.alura.platform.user;
+package com.alura.platform.user.entity;
 
 import com.alura.platform.user.dto.UserDto;
 import com.alura.platform.user.enums.UserRoleEnum;
