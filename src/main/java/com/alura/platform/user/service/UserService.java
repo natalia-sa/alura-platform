@@ -8,6 +8,7 @@ import com.alura.platform.user.dto.UserDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 @Service
 public class UserService {
@@ -23,6 +24,11 @@ public class UserService {
 
     public UserNameEmailRoleDto findByUsername(String username) {
         UserNameEmailRoleProjection userProjection = userRepository.findByUsername(username);
+
+        if (userProjection == null) {
+            throw new NotFoundException("No user was found");
+        }
+
         return new UserNameEmailRoleDto(userProjection);
     }
 }
