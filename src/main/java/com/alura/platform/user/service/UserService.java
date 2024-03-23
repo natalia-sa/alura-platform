@@ -1,6 +1,8 @@
 package com.alura.platform.user.service;
 
+import com.alura.platform.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.user.entity.User;
+import com.alura.platform.user.projections.UserNameEmailRoleProjection;
 import com.alura.platform.user.repository.UserRepository;
 import com.alura.platform.user.dto.UserDto;
 import jakarta.transaction.Transactional;
@@ -17,5 +19,10 @@ public class UserService {
     public User save(UserDto userDto) {
         User user = new User(userDto);
         return userRepository.save(user);
+    }
+
+    public UserNameEmailRoleDto findByUsername(String username) {
+        UserNameEmailRoleProjection userProjection = userRepository.findByUsername(username);
+        return new UserNameEmailRoleDto(userProjection);
     }
 }
