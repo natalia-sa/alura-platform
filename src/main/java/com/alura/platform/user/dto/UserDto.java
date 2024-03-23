@@ -19,7 +19,7 @@ public record UserDto(
         String username,
 
         @Schema(example = "joao@gmail.com")
-        @Email
+        @Email(regexp = "^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
         @NotBlank
         String email,
 
