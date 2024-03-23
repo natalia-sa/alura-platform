@@ -1,47 +1,34 @@
 package com.alura.platform.user.controller;
 
+import com.alura.platform.basic.BasicControllerTest;
 import com.alura.platform.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.user.enums.UserRoleEnum;
 import com.alura.platform.user.service.UserService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import org.webjars.NotFoundException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FindByUsernameTest {
+class FindByUsernameTest extends BasicControllerTest {
 
     private static final String PATH = "/user/by/username";
 
-    private MockMvc mockMvc;
     private final Gson gson = new Gson();
 
     @MockBean
     private UserService userService;
-
-    @Autowired
-    private WebApplicationContext context;
-
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
 
     @Test
     @DisplayName("Should return user data when user was found")
