@@ -1,8 +1,9 @@
-package com.alura.platform.user.service;
+package com.alura.platform.business.user.service;
 
-import com.alura.platform.user.dto.UserNameEmailRoleDto;
-import com.alura.platform.user.entity.User;
-import com.alura.platform.user.enums.UserRoleEnum;
+import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
+import com.alura.platform.business.user.entity.User;
+import com.alura.platform.business.user.enums.UserRoleEnum;
+import com.alura.platform.business.user.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

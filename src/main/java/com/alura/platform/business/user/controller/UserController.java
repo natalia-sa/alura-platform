@@ -1,9 +1,9 @@
-package com.alura.platform.user.controller;
+package com.alura.platform.business.user.controller;
 
-import com.alura.platform.user.dto.UserNameEmailRoleDto;
-import com.alura.platform.user.entity.User;
-import com.alura.platform.user.service.UserService;
-import com.alura.platform.user.dto.UserDto;
+import com.alura.platform.business.user.dto.UserDto;
+import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
+import com.alura.platform.business.user.entity.User;
+import com.alura.platform.business.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

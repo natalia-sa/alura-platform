@@ -1,8 +1,8 @@
-package com.alura.platform.user.dto;
+package com.alura.platform.business.user.dto;
 
-import com.alura.platform.user.entity.User;
-import com.alura.platform.user.enums.UserRoleEnum;
-import com.alura.platform.user.projections.UserNameEmailRoleProjection;
+import com.alura.platform.business.user.entity.User;
+import com.alura.platform.business.user.enums.UserRoleEnum;
+import com.alura.platform.business.user.projections.UserNameEmailRoleProjection;
 
 public record UserNameEmailRoleDto(String name, String email, UserRoleEnum role) {
 

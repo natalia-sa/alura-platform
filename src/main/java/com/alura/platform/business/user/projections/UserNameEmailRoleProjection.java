@@ -1,6 +1,6 @@
-package com.alura.platform.user.projections;
+package com.alura.platform.business.user.projections;
 
-import com.alura.platform.user.enums.UserRoleEnum;
+import com.alura.platform.business.user.enums.UserRoleEnum;
 
 public interface UserNameEmailRoleProjection {
     String getName();

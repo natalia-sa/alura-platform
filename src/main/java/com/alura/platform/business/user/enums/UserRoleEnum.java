@@ -1,4 +1,4 @@
-package com.alura.platform.user.enums;
+package com.alura.platform.business.user.enums;
 
 public enum UserRoleEnum {
     STUDENT,

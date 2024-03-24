@@ -1,7 +1,7 @@
-package com.alura.platform.user.repository;
+package com.alura.platform.business.user.repository;
 
-import com.alura.platform.user.entity.User;
-import com.alura.platform.user.projections.UserNameEmailRoleProjection;
+import com.alura.platform.business.user.projections.UserNameEmailRoleProjection;
+import com.alura.platform.business.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

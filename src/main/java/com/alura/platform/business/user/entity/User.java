@@ -1,7 +1,7 @@
-package com.alura.platform.user.entity;
+package com.alura.platform.business.user.entity;
 
-import com.alura.platform.user.dto.UserDto;
-import com.alura.platform.user.enums.UserRoleEnum;
+import com.alura.platform.business.user.dto.UserDto;
+import com.alura.platform.business.user.enums.UserRoleEnum;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

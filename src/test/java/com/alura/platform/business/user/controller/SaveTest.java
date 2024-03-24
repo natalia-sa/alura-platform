@@ -1,10 +1,10 @@
-package com.alura.platform.user.controller;
+package com.alura.platform.business.user.controller;
 
 import com.alura.platform.basic.BasicControllerTest;
-import com.alura.platform.user.dto.UserDto;
-import com.alura.platform.user.entity.User;
-import com.alura.platform.user.enums.UserRoleEnum;
-import com.alura.platform.user.service.UserService;
+import com.alura.platform.business.user.dto.UserDto;
+import com.alura.platform.business.user.entity.User;
+import com.alura.platform.business.user.enums.UserRoleEnum;
+import com.alura.platform.business.user.service.UserService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
