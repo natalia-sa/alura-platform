@@ -49,7 +49,6 @@ class FindByFilters {
         CourseFilterDto filter = new CourseFilterDto(null, paginationDto);
 
         List<CourseFilterResponseDto> courses = courseService.findByFilters(filter);
-
         Assertions.assertEquals(2, courses.size());
     }
 }
