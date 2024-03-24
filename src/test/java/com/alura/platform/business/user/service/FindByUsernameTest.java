@@ -4,6 +4,8 @@ import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.business.user.service.UserService;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,7 @@ class FindByUsernameTest {
 
     @Test
     @DisplayName("Should find user by username")
+    @Transactional
     void shouldFindUserByUsernameTest() {
         User user1 = new User("Joao Silva", "joao", "joao@gmail.com", "123", UserRoleEnum.STUDENT);
         User user2 = new User("Joana Silva", "joana", "joana@gmail.com", "123", UserRoleEnum.STUDENT);
@@ -36,6 +39,7 @@ class FindByUsernameTest {
 
     @Test
     @DisplayName("Should throw NotFoundException when user was not found")
+    @Transactional
     void shouldThrowExceptionWhenUserWasNotFoundTest() {
         Assertions.assertThrows(NotFoundException.class, () -> userService.findByUsername("ana"));
     }

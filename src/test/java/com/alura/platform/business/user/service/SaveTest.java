@@ -4,6 +4,8 @@ import com.alura.platform.business.user.dto.UserDto;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.business.user.service.UserService;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,12 @@ class SaveTest {
 
     @Autowired
     private UserService userService;
+
+    @AfterEach
+    @Transactional
+    void cleanDatabase() {
+        userService.deleteAll();
+    }
 
     @Test
     @DisplayName("Should save user successfully")

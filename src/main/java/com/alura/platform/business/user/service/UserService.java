@@ -33,6 +33,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public void deleteAll() {
+        userRepository.deleteAll();
+    }
+
     public void save(User user) {
         userRepository.save(user);
     }
