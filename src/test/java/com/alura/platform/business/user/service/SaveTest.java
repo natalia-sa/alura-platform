@@ -3,7 +3,6 @@ package com.alura.platform.business.user.service;
 import com.alura.platform.business.user.dto.UserDto;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.enums.UserRoleEnum;
-import com.alura.platform.business.user.service.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 class SaveTest {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @AfterEach
     @Transactional

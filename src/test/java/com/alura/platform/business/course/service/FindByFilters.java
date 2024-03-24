@@ -25,7 +25,7 @@ class FindByFilters {
 
 
     @Autowired
-    private CourseService courseService;
+    private CourseServiceImpl courseService;
 
     @Autowired
     private UserService userService;

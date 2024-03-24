@@ -28,7 +28,7 @@ class SaveTest {
     private UserService userService;
 
     @Autowired
-    private RegistrationService registrationService;
+    private RegistrationServiceImpl registrationService;
 
     @AfterEach
     @Transactional

@@ -3,9 +3,7 @@ package com.alura.platform.business.user.service;
 import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.enums.UserRoleEnum;
-import com.alura.platform.business.user.service.UserService;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,7 @@ import org.webjars.NotFoundException;
 class FindByUsernameTest {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Test
     @DisplayName("Should find user by username")

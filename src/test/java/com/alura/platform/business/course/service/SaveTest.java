@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 class SaveTest {
 
     @Autowired
-    private CourseService courseService;
+    private CourseServiceImpl courseService;
 
     @Autowired
     private UserService userService;
