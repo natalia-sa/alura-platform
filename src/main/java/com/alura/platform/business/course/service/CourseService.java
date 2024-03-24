@@ -1,5 +1,6 @@
 package com.alura.platform.business.course.service;
 
+import com.alura.platform.business.basic.BasicService;
 import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
@@ -10,18 +11,22 @@ import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.business.user.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class CourseService {
+public class CourseService implements BasicService<Course, Long> {
 
     @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
     private UserService userService;
+
+    @Override
+    public JpaRepository<Course, Long> getRepository() {
+        return courseRepository;
+    }
 
     @Transactional
     public Course save(CourseDto courseDto) {
@@ -38,14 +43,6 @@ public class CourseService {
 
     private boolean checkIfUserIsInstructor(User user) {
         return user.getRole().equals(UserRoleEnum.INSTRUCTOR);
-    }
-
-    public void deleteAll() {
-        courseRepository.deleteAll();
-    }
-
-    public List<Course> findAll() {
-        return courseRepository.findAll();
     }
 
     @Transactional
