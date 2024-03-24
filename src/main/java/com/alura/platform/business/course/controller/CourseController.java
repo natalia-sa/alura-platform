@@ -10,13 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/course")
@@ -42,6 +40,26 @@ public class CourseController {
             return new ResponseEntity<>(course, HttpStatus.CREATED);
         } catch (ActionDeniedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/inactivate/by/code")
+    @Operation(summary = "Update course status to INACTIVE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Course was inactivated",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Course.class)) }),
+            @ApiResponse(responseCode = "500", description = "Something went wrong while inactivating course",
+                    content = @Content) })
+    public ResponseEntity inactivate(
+            @RequestParam
+            @NotBlank
+            String code) {
+        try {
+            courseService.inactivate(code);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

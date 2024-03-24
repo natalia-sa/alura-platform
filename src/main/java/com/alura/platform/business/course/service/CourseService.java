@@ -12,7 +12,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -47,5 +46,11 @@ public class CourseService {
 
     public List<Course> findAll() {
         return courseRepository.findAll();
+    }
+
+    @Transactional
+    public void inactivate(String code) {
+        Course course = courseRepository.findByCode(code).orElseThrow();
+        course.setStatus(CourseStatusEnum.INACTIVE);
     }
 }
