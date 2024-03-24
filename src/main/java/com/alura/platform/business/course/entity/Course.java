@@ -1,5 +1,6 @@
 package com.alura.platform.business.course.entity;
 
+import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.user.entity.User;
 import jakarta.persistence.*;
@@ -45,6 +46,12 @@ public class Course {
         this.instructor = instructor;
         this.description = description;
         this.status = status;
+    }
+
+    public Course(CourseDto courseDto) {
+        this.name = courseDto.name();
+        this.code = courseDto.code();
+        this.description = courseDto.description();
     }
 
     public Course() {

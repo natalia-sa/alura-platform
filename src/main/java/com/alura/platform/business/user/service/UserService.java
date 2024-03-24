@@ -37,8 +37,8 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    public void save(User user) {
-        userRepository.save(user);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     public UserNameEmailRoleDto findByUsername(String username) {

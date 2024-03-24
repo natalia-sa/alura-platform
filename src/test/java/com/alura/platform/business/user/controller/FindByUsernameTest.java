@@ -20,7 +20,6 @@ import org.webjars.NotFoundException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FindByUsernameTest extends BasicControllerTest {
 
     private static final String PATH = "/user/by/username";

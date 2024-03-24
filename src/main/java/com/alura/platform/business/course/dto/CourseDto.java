@@ -1,5 +1,7 @@
 package com.alura.platform.business.course.dto;
 
+import com.alura.platform.business.course.entity.Course;
+import com.alura.platform.business.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,4 +26,8 @@ public record CourseDto(
         @Schema(example = "IA course to beginners")
         @NotBlank
         String description) {
+
+        public CourseDto(Course course) {
+                this(course.getName(), course.getCode(), course.getInstructor().getId(), course.getDescription());
+        }
 }
