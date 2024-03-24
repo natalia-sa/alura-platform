@@ -1,6 +1,6 @@
 package com.alura.platform.user.service;
 
-import com.alura.platform.user.dto.UserDto;
+import com.alura.platform.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.user.entity.User;
 import com.alura.platform.user.enums.UserRoleEnum;
 import org.junit.jupiter.api.Assertions;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.webjars.NotFoundException;
 
 @SpringBootTest
 @ActiveProfiles({"test"})
@@ -18,24 +19,23 @@ class FindByUsernameTest {
     private UserService userService;
 
     @Test
-    @DisplayName("Should save user successfully")
-    void shouldSaveUserTest() {
-        UserDto userDto = makeUserDto(
-                "joao",
-                "joao",
-                "joao.silva_12@gmail.com",
-                "123",
-                UserRoleEnum.STUDENT);
+    @DisplayName("Should find user by username")
+    void shouldFindUserByUsernameTest() {
+        User user1 = new User("Joao Silva", "joao", "joao@gmail.com", "123", UserRoleEnum.STUDENT);
+        User user2 = new User("Joana Silva", "joana", "joana@gmail.com", "123", UserRoleEnum.STUDENT);
+        userService.save(user1);
+        userService.save(user2);
 
-        User user = userService.save(userDto);
-        UserDto savedUserDto = new UserDto(user);
+        UserNameEmailRoleDto expectedUserDto = new UserNameEmailRoleDto(user2);
 
-        Assertions.assertNotNull(user.getId());
-        Assertions.assertEquals(1, userService.findAll().size());
-        Assertions.assertEquals(userDto, savedUserDto);
+        UserNameEmailRoleDto userFound = userService.findByUsername("joana");
+
+        Assertions.assertEquals(expectedUserDto, userFound);
     }
 
-    private UserDto makeUserDto(String name, String username, String email, String password, UserRoleEnum role) {
-        return new UserDto(name, username, email, password, role);
+    @Test
+    @DisplayName("Should throw NotFoundException when user was not found")
+    void shouldThrowExceptionWhenUserWasNotFoundTest() {
+        Assertions.assertThrows(NotFoundException.class, () -> userService.findByUsername("ana"));
     }
 }

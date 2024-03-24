@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
     public UserNameEmailRoleDto findByUsername(String username) {
         UserNameEmailRoleProjection userProjection = userRepository.findByUsername(username);
 
