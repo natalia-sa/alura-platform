@@ -93,7 +93,7 @@ public class CourseController {
             PaginationDto paginationDto = new PaginationDto(page, size);
             CourseFilterDto filtersDto = new CourseFilterDto(status, paginationDto);
             List<CourseFilterResponseDto> courses = courseService.findByFilters(filtersDto);
-            return new ResponseEntity<>(courses, HttpStatus.CREATED);
+            return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
