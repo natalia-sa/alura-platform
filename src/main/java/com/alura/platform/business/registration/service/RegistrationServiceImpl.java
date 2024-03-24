@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 class RegistrationServiceImpl implements RegistrationService {
 
@@ -45,6 +47,11 @@ class RegistrationServiceImpl implements RegistrationService {
 
         Registration registration = new Registration(user, course);
         return registrationRepository.save(registration);
+    }
+
+    @Override
+    public Optional<Registration> findByUserIdCourseId(Long userId, Long courseId) {
+        return registrationRepository.findByUserIdCourseId(userId, courseId);
     }
 
     private boolean checkIfCourseIsActive(Course course) {
