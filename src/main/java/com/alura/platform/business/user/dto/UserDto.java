@@ -28,7 +28,7 @@ public record UserDto(
         @NotBlank
         String password,
 
-        @Schema(example = "STUDENT")
+        @Schema(example = "INSTRUCTOR")
         UserRoleEnum role) {
 
         public UserDto(User user) {
