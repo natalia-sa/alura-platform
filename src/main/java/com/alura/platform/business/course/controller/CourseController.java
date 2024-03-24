@@ -45,7 +45,7 @@ public class CourseController {
         }
     }
 
-    @PostMapping(value = "/inactivate/by/code")
+    @PatchMapping(value = "/inactivate/by/code")
     @Operation(summary = "Update course status to INACTIVE")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Course was inactivated",
