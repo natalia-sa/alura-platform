@@ -27,12 +27,13 @@ public class UserController {
     @PostMapping(value = "")
     @Operation(summary = "Save new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User was created successfully",
+            @ApiResponse(responseCode = "201", description = "User created successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = User.class)) }),
-            @ApiResponse(responseCode = "500", description = "Something went wrong while creating user",
-                    content = @Content) })
-    public ResponseEntity save(
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating user") })
+    public ResponseEntity<User> save(
             @RequestBody
             @Valid
             UserDto userDto) {
@@ -47,14 +48,14 @@ public class UserController {
     @GetMapping(value = "/by/username")
     @Operation(summary = "Get user by username")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User was found",
+            @ApiResponse(responseCode = "200", description = "User found",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class)) }),
-            @ApiResponse(responseCode = "500", description = "Something went wrong while searching user",
-                    content = @Content) })
+                            schema = @Schema(implementation = UserNameEmailRoleDto.class)) }),
+            @ApiResponse(responseCode = "500", description = "Internal server error occurred while searching user") })
     public ResponseEntity findByUsername(
             @RequestParam
             @NotBlank
+            @Schema(example = "joao")
             String username
             ) {
         try {

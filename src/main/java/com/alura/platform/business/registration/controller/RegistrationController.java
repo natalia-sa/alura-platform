@@ -22,18 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-
     @Autowired
     private RegistrationService registrationService;
 
     @PostMapping(value = "")
     @Operation(summary = "Save new registration")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Registration was created successfully",
+            @ApiResponse(responseCode = "201", description = "Registration created successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Registration.class)) }),
-            @ApiResponse(responseCode = "500", description = "Something went wrong while creating registration",
-                    content = @Content) })
+            @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating registration") })
     public ResponseEntity save(
             @RequestBody
             @Valid

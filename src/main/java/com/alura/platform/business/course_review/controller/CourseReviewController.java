@@ -22,18 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/course-review")
 public class CourseReviewController {
 
-
     @Autowired
     private CourseReviewService courseReviewService;
 
     @PostMapping(value = "")
     @Operation(summary = "Save new course review")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Course review was created successfully",
+            @ApiResponse(responseCode = "201", description = "Course review created successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CourseReview.class)) }),
-            @ApiResponse(responseCode = "500", description = "Something went wrong while creating course review",
-                    content = @Content) })
+            @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating course review") })
     public ResponseEntity save(
             @RequestBody
             @Valid

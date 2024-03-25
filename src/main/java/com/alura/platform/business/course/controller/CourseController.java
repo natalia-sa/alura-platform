@@ -17,11 +17,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -34,11 +36,10 @@ public class CourseController {
     @PostMapping(value = "")
     @Operation(summary = "Save new course")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Course was created successfully",
+            @ApiResponse(responseCode = "201", description = "Course created successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Course.class)) }),
-            @ApiResponse(responseCode = "500", description = "Something went wrong while creating course",
-                    content = @Content) })
+            @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating course") })
     public ResponseEntity save(
             @RequestBody
             @Valid
@@ -54,16 +55,14 @@ public class CourseController {
     }
 
     @PatchMapping(value = "/inactivate/by/code")
-    @Operation(summary = "Update course status to INACTIVE")
+    @Operation(summary = "Inactivate course")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Course was inactivated",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Course.class)) }),
-            @ApiResponse(responseCode = "500", description = "Something went wrong while inactivating course",
-                    content = @Content) })
-    public ResponseEntity inactivate(
+            @ApiResponse(responseCode = "200", description = "Course inactivated successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error occurred while inactivating course") })
+    public ResponseEntity<Void> inactivate(
             @RequestParam
             @NotBlank
+            @Schema(example = "code")
             String code) {
         try {
             courseService.inactivate(code);
@@ -76,19 +75,23 @@ public class CourseController {
     @GetMapping(value = "/by/filters")
     @Operation(summary = "List courses by filters")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Courses list was returned",
+            @ApiResponse(responseCode = "200", description = "Courses list returned successfully",
                     content = { @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = CourseFilterResponseDto.class))) }),
-            @ApiResponse(responseCode = "500", description = "Something went wrong while listing courses",
-                    content = @Content) })
-    public ResponseEntity findByFilters(
+            @ApiResponse(responseCode = "500", description = "Internal server error occurred while listing courses") })
+    public ResponseEntity<Collection<CourseFilterResponseDto>> findByFilters(
             @RequestParam(required = false)
+            @Schema(example = "ACTIVE")
             CourseStatusEnum status,
 
             @RequestParam
+            @Schema(example = "1")
+            @NotNull
             int page,
 
             @RequestParam
+            @Schema(example = "10")
+            @NotNull
             int size) {
         try {
             PaginationDto paginationDto = new PaginationDto(page, size);
@@ -103,12 +106,11 @@ public class CourseController {
     @GetMapping(value = "/nps")
     @Operation(summary = "List courses nps information")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of courses nps information was found",
+            @ApiResponse(responseCode = "200", description = "Courses nps information returned successfully",
                     content = { @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = CourseNpsReportDto.class))) }),
-            @ApiResponse(responseCode = "500", description = "Something went wrong while listing courses nps information",
-                    content = @Content) })
-    public ResponseEntity findNpsReport() {
+            @ApiResponse(responseCode = "500", description = "Internal server error occurred while listing courses nps information") })
+    public ResponseEntity<Collection<CourseNpsReportDto>> findNpsReport() {
         try {
             List<CourseNpsReportDto> courseNpsReports = courseService.findNpsReport();
             return new ResponseEntity<>(courseNpsReports, HttpStatus.OK);

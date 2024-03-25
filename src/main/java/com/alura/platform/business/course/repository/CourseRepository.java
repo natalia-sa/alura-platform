@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("""
-            SELECT course 
+            SELECT course
             FROM Course course
             WHERE course.code = :code""" )
     Optional<Course> findByCode(@Param("code") String code);
