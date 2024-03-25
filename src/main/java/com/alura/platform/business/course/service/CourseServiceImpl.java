@@ -1,21 +1,14 @@
 package com.alura.platform.business.course.service;
 
-import com.alura.platform.business.course.dto.CourseDto;
-import com.alura.platform.business.course.dto.CourseFilterDto;
-import com.alura.platform.business.course.dto.CourseFilterResponseDto;
-import com.alura.platform.business.course.dto.CourseNpsReportDto;
+import com.alura.platform.business.course.dto.*;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
+import com.alura.platform.business.course.repository.CourseFilterRepository;
 import com.alura.platform.business.course.repository.CourseRepository;
-import com.alura.platform.business.user.service.UserService;
-import com.alura.platform.exception.ActionDeniedException;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.enums.UserRoleEnum;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import com.alura.platform.business.user.service.UserService;
+import com.alura.platform.exception.ActionDeniedException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,10 +23,10 @@ class CourseServiceImpl implements CourseService {
     private CourseRepository courseRepository;
 
     @Autowired
-    private UserService userService;
+    private CourseFilterRepository courseFilterRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private UserService userService;
 
     @Override
     public JpaRepository<Course, Long> getRepository() {
@@ -66,16 +59,19 @@ class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseFilterResponseDto> findByFilters(CourseFilterDto filter) {
-        List<Long> courseIds = findIdByFilters(filter);
+    public CourseFilterResponseDto findByFilters(CourseFilterDto filter) {
+        List<Long> courseIds = courseFilterRepository.findIdByFilters(filter.status(), null, filter.pagination());
+        Long count = courseFilterRepository.countByFilters(filter.status(), null);
 
-        return courseIds
+        List<CourseWithInstructorDataDto> courses = courseIds
                 .stream()
                 .map(courseId -> {
                     Course course = courseRepository.findById(courseId).orElseThrow();
                     User instructor = userService.findById(course.getInstructor().getId()).orElseThrow();
-                    return new CourseFilterResponseDto(course, instructor);})
+                    return new CourseWithInstructorDataDto(course, instructor);})
                 .toList();
+
+        return new CourseFilterResponseDto(courses, count);
     }
 
     @Override
@@ -84,34 +80,4 @@ class CourseServiceImpl implements CourseService {
         return courses.stream().map(CourseNpsReportDto::new).toList();
     }
 
-    private List<Long> findIdByFilters(CourseFilterDto filter) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Course> root = criteriaQuery.from(Course.class);
-
-        if (filter.status() != null) {
-            Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), filter.status());
-            criteriaQuery.where(statusPredicate);
-        }
-
-        criteriaQuery.select(root.get("id"));
-
-        return entityManager.createQuery(criteriaQuery)
-                .setFirstResult(filter.pagination().getOffset())
-                .setMaxResults(filter.pagination().size())
-                .getResultList();
-    }
-
-    public long countByFilters(CourseFilterDto filter) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Course> root = countQuery.from(Course.class);
-
-        countQuery.select(criteriaBuilder.count(root));
-        if (filter.status() != null) {
-            countQuery.where(criteriaBuilder.equal(root.get("status"), filter.status()));
-        }
-
-        return entityManager.createQuery(countQuery).getSingleResult();
-    }
 }

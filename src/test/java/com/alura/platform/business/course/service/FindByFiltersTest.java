@@ -3,6 +3,7 @@ package com.alura.platform.business.course.service;
 import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
 import com.alura.platform.business.course.dto.CourseFilterResponseDto;
+import com.alura.platform.business.course.dto.CourseWithInstructorDataDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.user.entity.User;
@@ -48,17 +49,17 @@ class FindByFiltersTest {
         Course course2 = makeCourse("abcd", CourseStatusEnum.ACTIVE);
         Course course3 = makeCourse("abce", CourseStatusEnum.INACTIVE);
 
-        List<CourseFilterResponseDto> expectedCourses = List.of(
-                new CourseFilterResponseDto(course1, instructor),
-                new CourseFilterResponseDto(course2, instructor),
-                new CourseFilterResponseDto(course3, instructor));
+        List<CourseWithInstructorDataDto> expectedCourses = List.of(
+                new CourseWithInstructorDataDto(course1, instructor),
+                new CourseWithInstructorDataDto(course2, instructor),
+                new CourseWithInstructorDataDto(course3, instructor));
 
         PaginationDto paginationDto = new PaginationDto(1, 5);
         CourseFilterDto filter = new CourseFilterDto(null, paginationDto);
 
-        List<CourseFilterResponseDto> courses = courseService.findByFilters(filter);
-        Assertions.assertEquals(3, courses.size());
-        Assertions.assertTrue(courses.containsAll(expectedCourses));
+        CourseFilterResponseDto coursesFound = courseService.findByFilters(filter);
+        Assertions.assertEquals(3, coursesFound.totalCount());
+        Assertions.assertTrue(coursesFound.courses().containsAll(expectedCourses));
     }
 
     @Test
@@ -68,16 +69,16 @@ class FindByFiltersTest {
         Course course2 = makeCourse("abcd", CourseStatusEnum.ACTIVE);
         makeCourse("abce", CourseStatusEnum.INACTIVE);
 
-        List<CourseFilterResponseDto> expectedCourses = List.of(
-                new CourseFilterResponseDto(course1, instructor),
-                new CourseFilterResponseDto(course2, instructor));
+        List<CourseWithInstructorDataDto> expectedCourses = List.of(
+                new CourseWithInstructorDataDto(course1, instructor),
+                new CourseWithInstructorDataDto(course2, instructor));
 
         PaginationDto paginationDto = new PaginationDto(1, 5);
         CourseFilterDto filter = new CourseFilterDto(CourseStatusEnum.ACTIVE, paginationDto);
 
-        List<CourseFilterResponseDto> courses = courseService.findByFilters(filter);
-        Assertions.assertEquals(2, courses.size());
-        Assertions.assertTrue(courses.containsAll(expectedCourses));
+        CourseFilterResponseDto coursesFound = courseService.findByFilters(filter);
+        Assertions.assertEquals(2, coursesFound.totalCount());
+        Assertions.assertTrue(coursesFound.courses().containsAll(expectedCourses));
     }
 
     @Test
@@ -87,16 +88,16 @@ class FindByFiltersTest {
         Course course2 = makeCourse("abcd", CourseStatusEnum.ACTIVE);
         makeCourse("abce", CourseStatusEnum.INACTIVE);
 
-        List<CourseFilterResponseDto> expectedCoursesInPage1 = List.of(
-                new CourseFilterResponseDto(course1, instructor),
-                new CourseFilterResponseDto(course2, instructor));
+        List<CourseWithInstructorDataDto> expectedCoursesInPage1 = List.of(
+                new CourseWithInstructorDataDto(course1, instructor),
+                new CourseWithInstructorDataDto(course2, instructor));
 
         PaginationDto paginationDto = new PaginationDto(1, 2);
         CourseFilterDto filter = new CourseFilterDto(null, paginationDto);
 
-        List<CourseFilterResponseDto> courses = courseService.findByFilters(filter);
-        Assertions.assertEquals(2, courses.size());
-        Assertions.assertTrue(courses.containsAll(expectedCoursesInPage1));
+        CourseFilterResponseDto coursesFound = courseService.findByFilters(filter);
+        Assertions.assertEquals(3, coursesFound.totalCount());
+        Assertions.assertTrue(coursesFound.courses().containsAll(expectedCoursesInPage1));
     }
 
     private Course makeCourse(String code, CourseStatusEnum status) {

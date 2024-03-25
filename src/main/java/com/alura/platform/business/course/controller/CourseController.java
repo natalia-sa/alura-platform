@@ -1,12 +1,9 @@
 package com.alura.platform.business.course.controller;
 
 import com.alura.platform.business.basic.PaginationDto;
-import com.alura.platform.business.course.dto.CourseFilterDto;
-import com.alura.platform.business.course.dto.CourseFilterResponseDto;
-import com.alura.platform.business.course.dto.CourseNpsReportDto;
+import com.alura.platform.business.course.dto.*;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.course.service.CourseService;
-import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.exception.ActionDeniedException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -79,7 +76,7 @@ public class CourseController {
                     content = { @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = CourseFilterResponseDto.class))) }),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while listing courses") })
-    public ResponseEntity<Collection<CourseFilterResponseDto>> findByFilters(
+    public ResponseEntity<CourseFilterResponseDto> findByFilters(
             @RequestParam(required = false)
             @Schema(example = "ACTIVE")
             CourseStatusEnum status,
@@ -96,7 +93,7 @@ public class CourseController {
         try {
             PaginationDto paginationDto = new PaginationDto(page, size);
             CourseFilterDto filtersDto = new CourseFilterDto(status, paginationDto);
-            List<CourseFilterResponseDto> courses = courseService.findByFilters(filtersDto);
+            CourseFilterResponseDto courses = courseService.findByFilters(filtersDto);
             return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

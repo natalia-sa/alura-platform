@@ -34,16 +34,7 @@ class FindByFiltersTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 200 when listing courses")
     void shouldReturnSuccessWhenListingCoursesTest() throws Exception {
-        List<CourseFilterResponseDto> response = List.of(
-                new CourseFilterResponseDto(
-                        1L,
-                        "name",
-                        "code",
-                        1L,
-                        "name",
-                        CourseStatusEnum.INACTIVE,
-                        "description")
-        );
+        CourseFilterResponseDto response = new CourseFilterResponseDto(List.of(), 0L);
 
         String expectedResponse = gson.toJson(response);
 
