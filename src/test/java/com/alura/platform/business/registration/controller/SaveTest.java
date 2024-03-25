@@ -42,6 +42,16 @@ class SaveTest extends BasicControllerTest {
     }
 
     @Test
+    @DisplayName("Should return 400 when invalid data is received")
+    void shouldReturnBadRequestWhenInvalidDataIsReceivedTest() throws Exception {
+        RegistrationUserIdCourseIdDto registrationDto = new RegistrationUserIdCourseIdDto(null, 1L);
+        callEndpoint(registrationDto).andExpect(status().isBadRequest());
+
+        RegistrationUserIdCourseIdDto registrationDto2 = new RegistrationUserIdCourseIdDto(1L, null);
+        callEndpoint(registrationDto2).andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("Should return 403 when ActionDeniedException is thrown")
     void shouldReturnActionDeniedWhenActionDeniedExceptionIsThrownTest() throws Exception {
         RegistrationUserIdCourseIdDto registrationDto = new RegistrationUserIdCourseIdDto(1L, 1L);

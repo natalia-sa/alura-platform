@@ -8,11 +8,9 @@ import com.alura.platform.business.registration.entity.Registration;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.business.user.service.UserService;
+import com.alura.platform.exception.ActionDeniedException;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,6 +28,14 @@ class SaveTest {
     @Autowired
     private RegistrationServiceImpl registrationService;
 
+    private User instructor;
+
+    @BeforeEach
+    @Transactional
+    void setUp() {
+        instructor = makeUser("username", "user@gmail.com", UserRoleEnum.INSTRUCTOR);
+    }
+
     @AfterEach
     @Transactional
     void cleanDatabase() {
@@ -41,15 +47,32 @@ class SaveTest {
     @Test
     @DisplayName("Should save registration successfully")
     void shouldSaveRegistrationTest() {
-        User instructor = userService.save(new User("name", "username", "user@gmail.com", "password", UserRoleEnum.INSTRUCTOR));
-        User user = userService.save(new User("name", "newuser", "user2@gmail.com", "password", UserRoleEnum.STUDENT));
-
-        Course course = courseService.save(new Course("name", "code", instructor, "description", CourseStatusEnum.ACTIVE));
+        User user = makeUser("newuser", "user2@gmail.com", UserRoleEnum.STUDENT);
+        Course course = makeCourse(CourseStatusEnum.ACTIVE);
 
         RegistrationUserIdCourseIdDto registrationDto = new RegistrationUserIdCourseIdDto(user.getId(), course.getId());
         Registration registration = registrationService.save(registrationDto);
 
         Assertions.assertEquals(1, registrationService.findAll().size());
         Assertions.assertNotNull(registration.getId());
+    }
+
+    @Test
+    @DisplayName("Should throw AccessDeniedException when course is inactive")
+    void shouldThrowActionDeniedExceptionWhenCourseIsInactiveTest() {
+        User user = makeUser("newuser", "user2@gmail.com", UserRoleEnum.STUDENT);
+        Course course = makeCourse(CourseStatusEnum.INACTIVE);
+
+        RegistrationUserIdCourseIdDto registrationDto = new RegistrationUserIdCourseIdDto(user.getId(), course.getId());
+
+        Assertions.assertThrows(ActionDeniedException.class, () -> registrationService.save(registrationDto));
+    }
+
+    private User makeUser(String username, String email, UserRoleEnum role) {
+        return userService.save(new User("name", username, email, "password", role));
+    }
+
+    private Course makeCourse(CourseStatusEnum status) {
+        return courseService.save(new Course("name", "code", instructor, "description", status));
     }
 }
