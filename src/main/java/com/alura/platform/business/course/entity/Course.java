@@ -37,6 +37,9 @@ public class Course {
     @Column(name = "CREATED_AT", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "NPS")
+    private Integer nps;
+
     @Column(name = "INACTIVATED_AT")
     private LocalDateTime inactivatedAt;
 
@@ -90,6 +93,10 @@ public class Course {
         return inactivatedAt;
     }
 
+    public Integer getNps() {
+        return nps;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -108,6 +115,10 @@ public class Course {
 
     public void setStatus(CourseStatusEnum status) {
         this.status = status;
+    }
+
+    public void setNps(Integer nps) {
+        this.nps = nps;
     }
 
     @Override

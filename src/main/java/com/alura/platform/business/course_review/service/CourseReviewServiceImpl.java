@@ -18,6 +18,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 class CourseReviewServiceImpl implements CourseReviewService {
@@ -64,7 +65,11 @@ class CourseReviewServiceImpl implements CourseReviewService {
             sendEmailNotificationToInstructor(courseReview, instructor, course);
         }
 
-        return courseReviewRepository.save(courseReview);
+        CourseReview savedCourseReview = courseReviewRepository.save(courseReview);
+
+        updateNps(course);
+
+        return savedCourseReview;
     }
 
     private boolean checkIfCourseIsActive(Course course) {
@@ -87,6 +92,20 @@ class CourseReviewServiceImpl implements CourseReviewService {
         }
 
         EmailSender.send(recipientEmail, subject, body);
+    }
+
+    private void updateNps(Course course) {
+        Set<CourseReview> courseReviews = courseReviewRepository.findByCourseId(course.getId());
+
+        if(courseReviews.size() > 4) {
+            long promotersCount = courseReviews.stream().filter(r -> r.getRating() >= 9 && r.getRating() <= 10).count();
+            long detractorsCount = courseReviews.stream().filter(r -> r.getRating() >= 0 && r.getRating() <= 6).count();
+
+            double nps = (promotersCount - detractorsCount) / (double) courseReviews.size() * 100;
+
+            course.setNps((int) nps);
+        }
+
     }
 
 }
