@@ -9,7 +9,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+
+import java.util.NoSuchElementException;
 
 @Service
 class UserServiceImpl implements UserService {
@@ -34,7 +35,7 @@ class UserServiceImpl implements UserService {
         UserNameEmailRoleProjection userProjection = userRepository.findByUsername(username);
 
         if (userProjection == null) {
-            throw new NotFoundException("No user was found");
+            throw new NoSuchElementException("No user was found");
         }
 
         return new UserNameEmailRoleDto(userProjection);

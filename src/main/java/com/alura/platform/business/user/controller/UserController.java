@@ -15,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.webjars.NotFoundException;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/user")
@@ -61,7 +62,7 @@ public class UserController {
         try {
             UserNameEmailRoleDto userDto = userService.findByUsername(username);
             return new ResponseEntity<>(userDto, HttpStatus.OK);
-        } catch (NotFoundException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
