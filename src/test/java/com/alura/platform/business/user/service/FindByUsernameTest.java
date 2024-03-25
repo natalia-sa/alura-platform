@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.webjars.NotFoundException;
+
+import java.util.NoSuchElementException;
 
 @SpringBootTest
 @ActiveProfiles({"test"})
@@ -39,6 +40,6 @@ class FindByUsernameTest {
     @DisplayName("Should throw NotFoundException when user was not found")
     @Transactional
     void shouldThrowExceptionWhenUserWasNotFoundTest() {
-        Assertions.assertThrows(NotFoundException.class, () -> userService.findByUsername("ana"));
+        Assertions.assertThrows(NoSuchElementException.class, () -> userService.findByUsername("ana"));
     }
 }

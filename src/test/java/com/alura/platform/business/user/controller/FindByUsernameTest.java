@@ -15,7 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.webjars.NotFoundException;
+
+import java.util.NoSuchElementException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,7 +62,7 @@ class FindByUsernameTest extends BasicControllerTest {
         String username = "joao";
 
         Mockito.when(userService.findByUsername(username))
-                .thenThrow(new NotFoundException("No user was found"));
+                .thenThrow(new NoSuchElementException("No user was found"));
 
         callEndpoint(username).andExpect(status().isNotFound());
     }
