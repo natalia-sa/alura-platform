@@ -87,12 +87,12 @@ public class CourseController {
             @RequestParam
             @Schema(example = "1")
             @NotNull
-            int page,
+            Integer page,
 
             @RequestParam
             @Schema(example = "10")
             @NotNull
-            int size) {
+            Integer size) {
         try {
             PaginationDto paginationDto = new PaginationDto(page, size);
             CourseFilterDto filtersDto = new CourseFilterDto(status, paginationDto);

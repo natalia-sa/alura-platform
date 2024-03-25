@@ -31,6 +31,13 @@ class InactivateTest extends BasicControllerTest {
         Mockito.verify(this.courseService, Mockito.times(1)).inactivate(code);
     }
 
+    @Test
+    @DisplayName("Should return 400 when required param was not passed, or is blank")
+    void shouldReturnBadRequestWhenCodeIsNullOrBlankTest() throws Exception {
+        callEndpoint("").andExpect(status().isBadRequest());
+        callEndpoint(null).andExpect(status().isBadRequest());
+    }
+
     private ResultActions callEndpoint(String code) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .patch(PATH)

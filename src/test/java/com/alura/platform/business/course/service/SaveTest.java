@@ -5,11 +5,9 @@ import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.business.user.service.UserService;
+import com.alura.platform.exception.ActionDeniedException;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,6 +22,14 @@ class SaveTest {
     @Autowired
     private UserService userService;
 
+    private User instructor;
+
+    @BeforeEach
+    @Transactional
+    void setUp() {
+        instructor = userService.save(new User("name", "username", "user@gmail.com", "password", UserRoleEnum.INSTRUCTOR));
+    }
+
     @AfterEach
     @Transactional
     void cleanDatabase() {
@@ -34,7 +40,6 @@ class SaveTest {
     @Test
     @DisplayName("Should save course successfully")
     void shouldSaveCourseTest() {
-        User instructor = userService.save(new User("name", "username", "user@gmail.com", "password", UserRoleEnum.INSTRUCTOR));
         CourseDto courseDto = makeCourseDto("course", "co-course", instructor.getId(), "the new course");
 
         Course course = courseService.save(courseDto);
@@ -43,6 +48,16 @@ class SaveTest {
         Assertions.assertNotNull(course.getId());
         Assertions.assertEquals(1, courseService.findAll().size());
         Assertions.assertEquals(courseDto, savedCourseDto);
+    }
+
+    @Test
+    @DisplayName("Should throw ActionDeniedException when user is not instructor")
+    void shouldThrowActionDeniedExceptionTest() {
+        User student = userService.save(new User("name", "user", "user2@gmail.com", "password", UserRoleEnum.STUDENT));
+
+        CourseDto courseDto = makeCourseDto("course", "co-course", student.getId(), "the new course");
+
+        Assertions.assertThrows(ActionDeniedException.class, () -> courseService.save(courseDto));
     }
 
     private CourseDto makeCourseDto(String name, String code, Long instructorId, String description) {

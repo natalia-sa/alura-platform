@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class FindByFilters extends BasicControllerTest {
+class FindByFiltersTest extends BasicControllerTest {
 
     private static final String PATH = "/course/by/filters";
 
@@ -51,19 +51,32 @@ class FindByFilters extends BasicControllerTest {
         CourseFilterDto filter = new CourseFilterDto(CourseStatusEnum.ACTIVE, paginationDto);
         Mockito.when(this.courseService.findByFilters(filter)).thenReturn(response);
 
-        MvcResult result = callEndpoint(CourseStatusEnum.ACTIVE, 1, 2).andExpect(status().isOk()).andReturn();
+        MvcResult result = callEndpoint(filter).andExpect(status().isOk()).andReturn();
         String responseString = result.getResponse().getContentAsString();
         Mockito.verify(this.courseService, Mockito.times(1)).findByFilters(filter);
         Assertions.assertEquals(expectedResponse, responseString);
     }
 
+    @Test
+    @DisplayName("Should return 400 when required information is not passed as parameter")
+    void shouldReturnBadRequestWhenListingCoursesTest() throws Exception {
+        PaginationDto paginationDto = new PaginationDto(null, 2);
+        CourseFilterDto filter = new CourseFilterDto(CourseStatusEnum.ACTIVE, paginationDto);
 
-    private ResultActions callEndpoint(CourseStatusEnum status, int page, int size) throws Exception {
+        callEndpoint(filter).andExpect(status().isBadRequest());
+
+        PaginationDto paginationDto2 = new PaginationDto(1, null);
+        CourseFilterDto filter2 = new CourseFilterDto(CourseStatusEnum.ACTIVE, paginationDto2);
+
+        callEndpoint(filter2).andExpect(status().isBadRequest());
+    }
+
+    private ResultActions callEndpoint(CourseFilterDto filter) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .get(PATH)
-                .queryParam("status", String.valueOf(status))
-                .queryParam("page", String.valueOf(page))
-                .queryParam("size", String.valueOf(size))
+                .queryParam("status", String.valueOf(filter.status()))
+                .queryParam("page", String.valueOf(filter.pagination().page()))
+                .queryParam("size", String.valueOf(filter.pagination().size()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
     }
 }

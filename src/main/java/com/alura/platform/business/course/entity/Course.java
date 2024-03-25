@@ -51,6 +51,15 @@ public class Course {
         this.status = status;
     }
 
+    public Course(String name, String code, User instructor, String description, CourseStatusEnum status, Integer nps) {
+        this.name = name;
+        this.code = code;
+        this.instructor = instructor;
+        this.description = description;
+        this.status = status;
+        this.nps = nps;
+    }
+
     public Course(CourseDto courseDto) {
         this.name = courseDto.name();
         this.code = courseDto.code();
