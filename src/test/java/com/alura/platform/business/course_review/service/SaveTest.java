@@ -10,11 +10,9 @@ import com.alura.platform.business.registration.service.RegistrationService;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.business.user.service.UserService;
+import com.alura.platform.exception.ActionDeniedException;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -35,6 +33,32 @@ class SaveTest {
     @Autowired
     private RegistrationService registrationService;
 
+    private User user;
+    private User user3;
+    private User user4;
+    private User user5;
+    private User user6;
+    private Course course;
+
+    @BeforeEach
+    @Transactional
+    void setUp() {
+        User instructor = makeUser("username", "user@gmail.com", UserRoleEnum.INSTRUCTOR);
+        user = makeUser("newuser", "user2@gmail.com", UserRoleEnum.STUDENT);
+        user3 = makeUser("joao", "user3@gmail.com", UserRoleEnum.STUDENT);
+        user4 = makeUser("ana", "user4@gmail.com", UserRoleEnum.STUDENT);
+        user5 = makeUser("maria", "user5@gmail.com", UserRoleEnum.STUDENT);
+        user6 = makeUser("clara", "user6@gmail.com", UserRoleEnum.STUDENT);
+
+        course = courseService.save(new Course("name", "code", instructor, "description", CourseStatusEnum.ACTIVE));
+
+        registrationService.save(new Registration(user, course));
+        registrationService.save(new Registration(user3, course));
+        registrationService.save(new Registration(user4, course));
+        registrationService.save(new Registration(user5, course));
+        registrationService.save(new Registration(user6, course));
+    }
+
     @AfterEach
     @Transactional
     void cleanDatabase() {
@@ -47,11 +71,6 @@ class SaveTest {
     @Test
     @DisplayName("Should save course review successfully")
     void shouldSaveCourseReviewTest() {
-        User instructor = userService.save(new User("name", "username", "user@gmail.com", "password", UserRoleEnum.INSTRUCTOR));
-        User user = userService.save(new User("name", "newuser", "user2@gmail.com", "password", UserRoleEnum.STUDENT));
-        Course course = courseService.save(new Course("name", "code", instructor, "description", CourseStatusEnum.ACTIVE));
-        Registration registration = registrationService.save(new Registration(user, course));
-
         CourseReviewDto courseReviewDto = new CourseReviewDto(user.getId(), course.getId(), 8, "great");
         CourseReview courseReview = courseReviewService.save(courseReviewDto);
 
@@ -60,22 +79,16 @@ class SaveTest {
     }
 
     @Test
+    @DisplayName("Should throw ActionDeniedException when user is not registered in course")
+    void shouldThrowActionDeniedExceptionTest() {
+        User userNotRegistered = makeUser("new", "new@gmial.com", UserRoleEnum.STUDENT);
+        CourseReviewDto courseReviewDto = new CourseReviewDto(userNotRegistered.getId(), course.getId(), 8, "great");
+        Assertions.assertThrows(ActionDeniedException.class, () -> courseReviewService.save(courseReviewDto));
+    }
+
+    @Test
     @DisplayName("Should update course nps after saving new course review")
     void shouldUpdateCourseNpsTest() {
-        User instructor = userService.save(new User("name", "username", "user@gmail.com", "password", UserRoleEnum.INSTRUCTOR));
-        User user = userService.save(new User("name", "newuser", "user2@gmail.com", "password", UserRoleEnum.STUDENT));
-        User user3 = userService.save(new User("name", "joao", "user3@gmail.com", "password", UserRoleEnum.STUDENT));
-        User user4 = userService.save(new User("name", "ana", "user4@gmail.com", "password", UserRoleEnum.STUDENT));
-        User user5 = userService.save(new User("name", "maria", "user5@gmail.com", "password", UserRoleEnum.STUDENT));
-        User user6 = userService.save(new User("name", "clara", "user6@gmail.com", "password", UserRoleEnum.STUDENT));
-
-        Course course = courseService.save(new Course("name", "code", instructor, "description", CourseStatusEnum.ACTIVE));
-        registrationService.save(new Registration(user, course));
-        registrationService.save(new Registration(user3, course));
-        registrationService.save(new Registration(user4, course));
-        registrationService.save(new Registration(user5, course));
-        registrationService.save(new Registration(user6, course));
-
         CourseReviewDto courseReviewDto1 = new CourseReviewDto(user.getId(), course.getId(), 9, "great");
         CourseReviewDto courseReviewDto2 = new CourseReviewDto(user3.getId(), course.getId(), 10, "great");
         CourseReviewDto courseReviewDto3 = new CourseReviewDto(user4.getId(), course.getId(), 9, "great");
@@ -91,5 +104,9 @@ class SaveTest {
         course = courseService.findById(course.getId()).orElseThrow();
 
         Assertions.assertEquals(40, course.getNps());
+    }
+
+    private User makeUser(String username, String email, UserRoleEnum role) {
+        return userService.save(new User("name", username, email, "password", role));
     }
 }

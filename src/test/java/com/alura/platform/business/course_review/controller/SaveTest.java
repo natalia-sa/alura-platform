@@ -7,12 +7,17 @@ import com.alura.platform.business.course_review.service.CourseReviewService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.stream.Stream;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +42,21 @@ class SaveTest extends BasicControllerTest {
         callEndpoint(courseReviewDto).andExpect(status().isCreated());
 
         Mockito.verify(this.courseReviewService, Mockito.times(1)).save(courseReviewDto);
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "returnInvalidParams")
+    @DisplayName("Should return 400 when invalid rating values are passed as input")
+    void shouldReturnBadRequestWhenInvalidValuesAreReceivedTest(Integer rating) throws Exception {
+        CourseReviewDto courseReviewDto = makeCourseReviewDto(1L, 1L, rating, "bad course");
+        callEndpoint(courseReviewDto).andExpect(status().isBadRequest());
+    }
+
+    private static Stream<Arguments> returnInvalidParams() {
+        return Stream.of(
+                Arguments.of(-1),
+                Arguments.of(11)
+        );
     }
 
     private ResultActions callEndpoint(CourseReviewDto courseReviewDto) throws Exception {
