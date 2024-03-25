@@ -1,8 +1,8 @@
 package com.alura.platform.business.course.controller;
 
 import com.alura.platform.basic.BasicControllerTest;
+import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.CourseNpsReportDto;
-import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.course.service.CourseService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Assertions;
@@ -32,25 +32,25 @@ class FindNpsReportTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 200 when listing courses nps information")
     void shouldReturnSuccessWhenListingCourseNpsInformationTest() throws Exception {
-        List<CourseNpsReportDto> response = List.of(
-                new CourseNpsReportDto(
-                        1L, "name", CourseStatusEnum.INACTIVE, 1L, 10)
-        );
+        CourseNpsReportDto response = new CourseNpsReportDto(List.of(), 0L);
+        PaginationDto paginationDto = new PaginationDto(1, 10);
 
         String expectedResponse = gson.toJson(response);
 
-        Mockito.when(this.courseService.findNpsReport()).thenReturn(response);
+        Mockito.when(this.courseService.findNpsReport(paginationDto)).thenReturn(response);
 
-        MvcResult result = callEndpoint().andExpect(status().isOk()).andReturn();
+        MvcResult result = callEndpoint(paginationDto).andExpect(status().isOk()).andReturn();
         String responseString = result.getResponse().getContentAsString();
 
-        Mockito.verify(this.courseService, Mockito.times(1)).findNpsReport();
+        Mockito.verify(this.courseService, Mockito.times(1)).findNpsReport(paginationDto);
         Assertions.assertEquals(expectedResponse, responseString);
     }
 
-    private ResultActions callEndpoint() throws Exception {
+    private ResultActions callEndpoint(PaginationDto paginationDto) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .get(PATH)
+                .queryParam("page", String.valueOf(paginationDto.page()))
+                .queryParam("size", String.valueOf(paginationDto.size()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
     }
 }

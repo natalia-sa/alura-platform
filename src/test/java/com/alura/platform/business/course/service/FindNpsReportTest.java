@@ -1,5 +1,7 @@
 package com.alura.platform.business.course.service;
 
+import com.alura.platform.business.basic.PaginationDto;
+import com.alura.platform.business.course.dto.CourseNpsDto;
 import com.alura.platform.business.course.dto.CourseNpsReportDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
@@ -36,21 +38,21 @@ class FindNpsReportTest {
     }
 
     @Test
-    @DisplayName("Should list courses nps information")
+    @DisplayName("Should list courses with nps information")
     @Transactional
     void shouldListCoursesNpsInformationTest() {
+        PaginationDto paginationDto = new PaginationDto(1, 10);
         Course course1 = makeCourse("abc", null);
         Course course2 = makeCourse("abcd", 20);
         Course course3 = makeCourse("abce", 10);
 
-        List<CourseNpsReportDto> expected = List.of(
-                new CourseNpsReportDto(course1),
-                new CourseNpsReportDto(course2),
-                new CourseNpsReportDto(course3));
+        List<CourseNpsDto> expected = List.of(
+                new CourseNpsDto(course2),
+                new CourseNpsDto(course3));
 
-        List<CourseNpsReportDto> courses = courseService.findNpsReport();
-        Assertions.assertEquals(3, courses.size());
-        Assertions.assertTrue(courses.containsAll(expected));
+        CourseNpsReportDto courses = courseService.findNpsReport(paginationDto);
+        Assertions.assertEquals(2, courses.totalCount());
+        Assertions.assertTrue(courses.courses().containsAll(expected));
     }
 
     private Course makeCourse(String code, Integer nps) {

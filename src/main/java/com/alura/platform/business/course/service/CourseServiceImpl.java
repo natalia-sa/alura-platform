@@ -1,5 +1,6 @@
 package com.alura.platform.business.course.service;
 
+import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.*;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
@@ -75,9 +76,18 @@ class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseNpsReportDto> findNpsReport() {
-        List<Course> courses = courseRepository.findAll();
-        return courses.stream().map(CourseNpsReportDto::new).toList();
+    public CourseNpsReportDto findNpsReport(PaginationDto pagination) {
+        List<Long> courseIds = courseFilterRepository.findIdByFilters(null, true, pagination);
+        Long count = courseFilterRepository.countByFilters(null, true);
+
+        List<CourseNpsDto> courses = courseIds
+                .stream()
+                .map(courseId -> {
+                    Course course = courseRepository.findById(courseId).orElseThrow();
+                    return new CourseNpsDto(course);})
+                .toList();
+
+        return new CourseNpsReportDto(courses, count);
     }
 
 }
