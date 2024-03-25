@@ -46,17 +46,7 @@ class CourseReviewServiceImpl implements CourseReviewService {
         User user = userService.findById(courseReviewDto.userId()).orElseThrow();
         Course course = courseService.findById(courseReviewDto.courseId()).orElseThrow();
 
-        boolean isCourseActive = checkIfCourseIsActive(course);
-
-        if(!isCourseActive) {
-            throw new ActionDeniedException("Course is inactive");
-        }
-
-        boolean isUserRegisteredInCourse = checkIfUserIsRegisteredInCourse(courseReviewDto.userId(), courseReviewDto.courseId());
-
-        if (!isUserRegisteredInCourse) {
-            throw new ActionDeniedException("user is not registered in course");
-        }
+        validateSaveRequest(course, user);
 
         CourseReview courseReview = new CourseReview(user, course, courseReviewDto.rating(), courseReviewDto.comment());
 
@@ -72,13 +62,25 @@ class CourseReviewServiceImpl implements CourseReviewService {
         return savedCourseReview;
     }
 
-    private boolean checkIfCourseIsActive(Course course) {
-        return course.getStatus().equals(CourseStatusEnum.ACTIVE);
+    private void validateSaveRequest(Course course, User user) {
+        validateIfCourseIsActive(course);
+        validateIfUserIsRegisteredInCourse(user.getId(), course.getId());
     }
 
-    private boolean checkIfUserIsRegisteredInCourse(Long userId, Long courseId) {
+    private void validateIfCourseIsActive(Course course) {
+        boolean isCourseActive = course.getStatus().equals(CourseStatusEnum.ACTIVE);
+
+        if(!isCourseActive) {
+            throw new ActionDeniedException("Course is inactive");
+        }
+    }
+
+    private void validateIfUserIsRegisteredInCourse(Long userId, Long courseId) {
         Optional<Registration> registrationOptional = registrationService.findByUserIdCourseId(userId, courseId);
-        return registrationOptional.isPresent();
+
+        if(registrationOptional.isEmpty()) {
+            throw new ActionDeniedException("user is not registered in course");
+        }
     }
 
     private void sendEmailNotificationToInstructor(CourseReview courseReview, User instructor, Course course) {

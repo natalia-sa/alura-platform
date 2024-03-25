@@ -33,6 +33,7 @@ class SaveTest {
     @Autowired
     private RegistrationService registrationService;
 
+    private User instructor;
     private User user;
     private User user3;
     private User user4;
@@ -43,14 +44,14 @@ class SaveTest {
     @BeforeEach
     @Transactional
     void setUp() {
-        User instructor = makeUser("username", "user@gmail.com", UserRoleEnum.INSTRUCTOR);
+        instructor = makeUser("username", "user@gmail.com", UserRoleEnum.INSTRUCTOR);
         user = makeUser("newuser", "user2@gmail.com", UserRoleEnum.STUDENT);
         user3 = makeUser("joao", "user3@gmail.com", UserRoleEnum.STUDENT);
         user4 = makeUser("ana", "user4@gmail.com", UserRoleEnum.STUDENT);
         user5 = makeUser("maria", "user5@gmail.com", UserRoleEnum.STUDENT);
         user6 = makeUser("clara", "user6@gmail.com", UserRoleEnum.STUDENT);
 
-        course = courseService.save(new Course("name", "code", instructor, "description", CourseStatusEnum.ACTIVE));
+        course = makeCourse("code", CourseStatusEnum.ACTIVE);
 
         registrationService.save(new Registration(user, course));
         registrationService.save(new Registration(user3, course));
@@ -80,9 +81,18 @@ class SaveTest {
 
     @Test
     @DisplayName("Should throw ActionDeniedException when user is not registered in course")
-    void shouldThrowActionDeniedExceptionTest() {
+    void shouldThrowActionDeniedExceptionWhenUserIsNotRegisteredTest() {
         User userNotRegistered = makeUser("new", "new@gmial.com", UserRoleEnum.STUDENT);
         CourseReviewDto courseReviewDto = new CourseReviewDto(userNotRegistered.getId(), course.getId(), 8, "great");
+        Assertions.assertThrows(ActionDeniedException.class, () -> courseReviewService.save(courseReviewDto));
+    }
+
+    @Test
+    @DisplayName("Should throw ActionDeniedException when course is inactive")
+    void shouldThrowActionDeniedExceptionWhenCourseIsInactiveTest() {
+        Course inactiveCourse = makeCourse("inactive", CourseStatusEnum.INACTIVE);
+
+        CourseReviewDto courseReviewDto = new CourseReviewDto(user.getId(), inactiveCourse.getId(), 8, "great");
         Assertions.assertThrows(ActionDeniedException.class, () -> courseReviewService.save(courseReviewDto));
     }
 
@@ -108,5 +118,9 @@ class SaveTest {
 
     private User makeUser(String username, String email, UserRoleEnum role) {
         return userService.save(new User("name", username, email, "password", role));
+    }
+
+    private Course makeCourse(String code, CourseStatusEnum status) {
+        return courseService.save(new Course("name", code, instructor, "description", status));
     }
 }
