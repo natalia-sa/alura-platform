@@ -3,6 +3,7 @@ package com.alura.platform.business.course.controller;
 import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
 import com.alura.platform.business.course.dto.CourseFilterResponseDto;
+import com.alura.platform.business.course.dto.CourseNpsReportDto;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.course.service.CourseService;
 import com.alura.platform.business.course.dto.CourseDto;
@@ -94,6 +95,23 @@ public class CourseController {
             CourseFilterDto filtersDto = new CourseFilterDto(status, paginationDto);
             List<CourseFilterResponseDto> courses = courseService.findByFilters(filtersDto);
             return new ResponseEntity<>(courses, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/nps")
+    @Operation(summary = "List courses nps information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of courses nps information was found",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = CourseNpsReportDto.class))) }),
+            @ApiResponse(responseCode = "500", description = "Something went wrong while listing courses nps information",
+                    content = @Content) })
+    public ResponseEntity findNpsReport() {
+        try {
+            List<CourseNpsReportDto> courseNpsReports = courseService.findNpsReport();
+            return new ResponseEntity<>(courseNpsReports, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

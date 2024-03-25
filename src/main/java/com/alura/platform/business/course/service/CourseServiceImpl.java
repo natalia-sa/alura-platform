@@ -3,6 +3,7 @@ package com.alura.platform.business.course.service;
 import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
 import com.alura.platform.business.course.dto.CourseFilterResponseDto;
+import com.alura.platform.business.course.dto.CourseNpsReportDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.course.repository.CourseRepository;
@@ -75,6 +76,12 @@ class CourseServiceImpl implements CourseService {
                     User instructor = userService.findById(course.getInstructor().getId()).orElseThrow();
                     return new CourseFilterResponseDto(course, instructor);})
                 .toList();
+    }
+
+    @Override
+    public List<CourseNpsReportDto> findNpsReport() {
+        List<Course> courses = courseRepository.findAll();
+        return courses.stream().map(CourseNpsReportDto::new).toList();
     }
 
     private List<Long> findIdByFilters(CourseFilterDto filter) {
