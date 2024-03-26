@@ -1,7 +1,9 @@
 package com.alura.platform.business.course.controller;
 
 import com.alura.platform.basic.BasicControllerTest;
+import com.alura.platform.basic.SecurityContextTestUtils;
 import com.alura.platform.business.course.service.CourseService;
+import com.alura.platform.business.user.enums.UserRoleEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,6 +25,7 @@ class InactivateTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 200 when course was inactivated with success")
     void shouldReturnSuccessWhenCourseWasInactivatedTest() throws Exception {
+        SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.ADMIN);
         String code = "code";
         Mockito.doNothing().when(courseService).inactivate(code);
 

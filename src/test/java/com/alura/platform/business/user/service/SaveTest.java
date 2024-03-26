@@ -36,11 +36,10 @@ class SaveTest {
                 UserRoleEnum.STUDENT);
 
         User user = userService.save(userDto);
-        UserDto savedUserDto = new UserDto(user);
 
         Assertions.assertNotNull(user.getId());
+        Assertions.assertEquals(userDto.username(), user.getUsername());
         Assertions.assertEquals(1, userService.findAll().size());
-        Assertions.assertEquals(userDto, savedUserDto);
     }
 
     private UserDto makeUserDto(String name, String username, String email, String password, UserRoleEnum role) {

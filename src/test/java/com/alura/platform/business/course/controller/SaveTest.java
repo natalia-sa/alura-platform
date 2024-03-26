@@ -1,9 +1,11 @@
 package com.alura.platform.business.course.controller;
 
 import com.alura.platform.basic.BasicControllerTest;
+import com.alura.platform.basic.SecurityContextTestUtils;
 import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.service.CourseService;
+import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.exception.ActionDeniedException;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +36,7 @@ class SaveTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 201 when course was created with success")
     void shouldReturnSuccessWhenCourseWasCreatedSuccessfullyTest() throws Exception {
+        SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.ADMIN);
         CourseDto courseDto = makeCourseDto("course", "co-course", 1L, "the new course");
 
         Course course = new Course(courseDto);
@@ -48,6 +51,7 @@ class SaveTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 403 when ActionDeniedException is thrown")
     void shouldReturnActionDeniedWhenActionDeniedExceptionIsThrownTest() throws Exception {
+        SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.ADMIN);
         CourseDto courseDto = makeCourseDto("course", "course", 1L, "the new course");
 
         Mockito.when(courseService.save(courseDto))

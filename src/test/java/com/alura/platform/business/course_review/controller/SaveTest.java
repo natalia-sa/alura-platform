@@ -1,9 +1,11 @@
 package com.alura.platform.business.course_review.controller;
 
 import com.alura.platform.basic.BasicControllerTest;
+import com.alura.platform.basic.SecurityContextTestUtils;
 import com.alura.platform.business.course_review.dto.CourseReviewDto;
 import com.alura.platform.business.course_review.entity.CourseReview;
 import com.alura.platform.business.course_review.service.CourseReviewService;
+import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,7 @@ class SaveTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 201 when course review was created with success")
     void shouldReturnSuccessWhenCourseReviewWasCreatedSuccessfullyTest() throws Exception {
+        SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.STUDENT);
         CourseReviewDto courseReviewDto = makeCourseReviewDto(1L, 1L, 1, "bad course");
 
         CourseReview courseReview = new CourseReview();

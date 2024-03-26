@@ -1,9 +1,11 @@
 package com.alura.platform.business.registration.controller;
 
 import com.alura.platform.basic.BasicControllerTest;
+import com.alura.platform.basic.SecurityContextTestUtils;
 import com.alura.platform.business.registration.dto.RegistrationUserIdCourseIdDto;
 import com.alura.platform.business.registration.entity.Registration;
 import com.alura.platform.business.registration.service.RegistrationService;
+import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.exception.ActionDeniedException;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +32,7 @@ class SaveTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 201 when registration was created with success")
     void shouldReturnSuccessWhenRegistrationWasCreatedSuccessfullyTest() throws Exception {
+        SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.STUDENT);
         RegistrationUserIdCourseIdDto registrationDto = new RegistrationUserIdCourseIdDto(1L, 1L);
 
         Registration registration = new Registration();
@@ -54,6 +57,7 @@ class SaveTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 403 when ActionDeniedException is thrown")
     void shouldReturnActionDeniedWhenActionDeniedExceptionIsThrownTest() throws Exception {
+        SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.STUDENT);
         RegistrationUserIdCourseIdDto registrationDto = new RegistrationUserIdCourseIdDto(1L, 1L);
 
         Mockito.when(registrationService.save(registrationDto))

@@ -1,6 +1,7 @@
 package com.alura.platform.business.user.controller;
 
 import com.alura.platform.basic.BasicControllerTest;
+import com.alura.platform.basic.SecurityContextTestUtils;
 import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.alura.platform.business.user.service.UserService;
@@ -32,6 +33,7 @@ class FindByUsernameTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return user data when user was found")
     void shouldReturnUserDtoWhenUserWasFoundTest() throws Exception {
+        SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.ADMIN);
         String username = "joao";
         UserNameEmailRoleDto userDto = new UserNameEmailRoleDto("Joao Silva", "joao@gmail.com", UserRoleEnum.STUDENT);
         String expectedResponse = gson.toJson(userDto);
@@ -59,6 +61,7 @@ class FindByUsernameTest extends BasicControllerTest {
     @Test
     @DisplayName("Should return 404 when user was not found")
     void shouldReturnNotFoundWhenUserWasNotFoundTest() throws Exception {
+        SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.ADMIN);
         String username = "joao";
 
         Mockito.when(userService.findByUsername(username))
