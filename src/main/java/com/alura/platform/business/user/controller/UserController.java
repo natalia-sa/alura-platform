@@ -29,9 +29,7 @@ public class UserController {
     @PostMapping(value = "")
     @Operation(summary = "Save new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class)) }),
+            @ApiResponse(responseCode = "201", description = "User created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating user") })
@@ -40,8 +38,8 @@ public class UserController {
             @Valid
             UserDto userDto) {
         try {
-            User user = userService.save(userDto);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            userService.save(userDto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

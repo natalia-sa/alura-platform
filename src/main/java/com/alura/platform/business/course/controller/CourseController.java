@@ -5,7 +5,6 @@ import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
 import com.alura.platform.business.course.dto.CourseFilterResponseDto;
 import com.alura.platform.business.course.dto.CourseNpsReportDto;
-import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.course.service.CourseService;
 import com.alura.platform.exception.ActionDeniedException;
@@ -35,17 +34,15 @@ public class CourseController {
     @PostMapping(value = "")
     @Operation(summary = "Save new course")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Course created successfully",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Course.class)) }),
+            @ApiResponse(responseCode = "201", description = "Course created successfully"),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating course") })
     public ResponseEntity save(
             @RequestBody
             @Valid
             CourseDto courseDto) {
         try {
-            Course course = courseService.save(courseDto);
-            return new ResponseEntity<>(course, HttpStatus.CREATED);
+            courseService.save(courseDto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (ActionDeniedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
