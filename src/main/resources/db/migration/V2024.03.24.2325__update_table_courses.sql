@@ -1,2 +1,2 @@
 ALTER TABLE courses
-    ADD COLUMN nps INTEGER;
+    ADD COLUMN nps INT;
