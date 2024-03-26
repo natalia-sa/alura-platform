@@ -8,6 +8,7 @@ import com.alura.platform.business.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -26,13 +27,14 @@ class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User save(UserDto userDto) {
-        User user = new User(userDto);
+        String encodedPassword = new BCryptPasswordEncoder().encode(userDto.password());
+        User user = new User(userDto, encodedPassword);
         return userRepository.save(user);
     }
 
     @Override
     public UserNameEmailRoleDto findByUsername(String username) {
-        UserNameEmailRoleProjection userProjection = userRepository.findByUsername(username);
+        UserNameEmailRoleProjection userProjection = userRepository.findNameEmailRoleByUsername(username);
 
         if (userProjection == null) {
             throw new NoSuchElementException("No user was found");

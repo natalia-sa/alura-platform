@@ -3,13 +3,18 @@ package com.alura.platform.business.user.entity;
 import com.alura.platform.business.user.dto.UserDto;
 import com.alura.platform.business.user.enums.UserRoleEnum;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "USERS")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +48,14 @@ public class User {
         this.role = userDto.role();
     }
 
+    public User(UserDto userDto, String encodedPassword) {
+        this.name = userDto.name();
+        this.username = userDto.username();
+        this.email = userDto.email();
+        this.password = encodedPassword;
+        this.role = userDto.role();
+    }
+
     public User(String name, String username, String email, String password, UserRoleEnum role) {
         this.name = name;
         this.username = username;
@@ -63,8 +76,35 @@ public class User {
         return name;
     }
 
+    @Override
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == UserRoleEnum.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public String getEmail() {

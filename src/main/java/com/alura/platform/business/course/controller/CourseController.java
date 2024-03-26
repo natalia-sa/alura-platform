@@ -21,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,6 +31,7 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "")
     @Operation(summary = "Save new course")
     @ApiResponses(value = {
@@ -51,6 +53,7 @@ public class CourseController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/inactivate/by/code")
     @Operation(summary = "Inactivate course")
     @ApiResponses(value = {
@@ -69,6 +72,7 @@ public class CourseController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/by/filters")
     @Operation(summary = "List courses by filters with pagination")
     @ApiResponses(value = {
@@ -100,6 +104,7 @@ public class CourseController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/nps")
     @Operation(summary = "List courses nps information with pagination")
     @ApiResponses(value = {

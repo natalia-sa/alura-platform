@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ public class CourseReviewController {
     @Autowired
     private CourseReviewService courseReviewService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(value = "")
     @Operation(summary = "Save new course review")
     @ApiResponses(value = {
@@ -37,8 +39,8 @@ public class CourseReviewController {
             @Valid
             CourseReviewDto courseReviewDto) {
         try {
-            CourseReview courseReview = courseReviewService.save(courseReviewDto);
-            return new ResponseEntity<>(courseReview, HttpStatus.CREATED);
+            courseReviewService.save(courseReviewDto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (ActionDeniedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
