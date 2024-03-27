@@ -1,4 +1,4 @@
-package com.alura.platform.business.basic;
+package com.alura.platform.business.basic.dto;
 
 public record PaginationDto(Integer page, Integer size) {
 

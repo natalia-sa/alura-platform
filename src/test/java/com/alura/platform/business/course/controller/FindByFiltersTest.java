@@ -2,7 +2,7 @@ package com.alura.platform.business.course.controller;
 
 import com.alura.platform.basic.BasicControllerTest;
 import com.alura.platform.basic.SecurityContextTestUtils;
-import com.alura.platform.business.basic.PaginationDto;
+import com.alura.platform.business.basic.dto.PaginationDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
 import com.alura.platform.business.course.dto.CourseListTotalCountDto;
 import com.alura.platform.business.course.enums.CourseStatusEnum;

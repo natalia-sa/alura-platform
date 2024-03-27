@@ -1,6 +1,7 @@
 package com.alura.platform.business.user.controller;
 
-import com.alura.platform.business.basic.IdDto;
+import com.alura.platform.business.basic.dto.ExceptionMessageDto;
+import com.alura.platform.business.basic.dto.IdDto;
 import com.alura.platform.business.user.dto.UserDto;
 import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.business.user.entity.User;
@@ -45,7 +46,8 @@ public class UserController {
             IdDto idDto = new IdDto(user.getId());
             return new ResponseEntity<>(idDto, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,9 +69,11 @@ public class UserController {
             UserNameEmailRoleDto userDto = userService.findByUsername(username);
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

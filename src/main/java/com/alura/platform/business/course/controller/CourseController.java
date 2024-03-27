@@ -1,7 +1,8 @@
 package com.alura.platform.business.course.controller;
 
-import com.alura.platform.business.basic.IdDto;
-import com.alura.platform.business.basic.PaginationDto;
+import com.alura.platform.business.basic.dto.ExceptionMessageDto;
+import com.alura.platform.business.basic.dto.IdDto;
+import com.alura.platform.business.basic.dto.PaginationDto;
 import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
 import com.alura.platform.business.course.dto.CourseListTotalCountDto;
@@ -49,9 +50,11 @@ public class CourseController {
             IdDto id = new IdDto(course.getId());
             return new ResponseEntity<>(id, HttpStatus.CREATED);
         } catch (ActionDeniedException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -61,7 +64,7 @@ public class CourseController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Course inactivated successfully"),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while inactivating course") })
-    public ResponseEntity<Void> inactivate(
+    public ResponseEntity inactivate(
             @RequestParam
             @NotBlank
             @Schema(example = "code")
@@ -70,7 +73,8 @@ public class CourseController {
             courseService.inactivate(code);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -82,7 +86,7 @@ public class CourseController {
                     content = { @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = CourseListTotalCountDto.class))) }),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while listing courses") })
-    public ResponseEntity<CourseListTotalCountDto> findByFilters(
+    public ResponseEntity findByFilters(
             @RequestParam(required = false)
             @Schema(example = "ACTIVE")
             CourseStatusEnum status,
@@ -102,7 +106,8 @@ public class CourseController {
             CourseListTotalCountDto courses = courseService.findByFilters(filtersDto);
             return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -114,7 +119,7 @@ public class CourseController {
                     content = { @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = CourseNpsTotalCountDto.class))) }),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while listing courses nps information") })
-    public ResponseEntity<CourseNpsTotalCountDto> findNpsReport(
+    public ResponseEntity findNpsReport(
             @RequestParam
             @Schema(example = "1")
             @NotNull
@@ -130,7 +135,8 @@ public class CourseController {
             CourseNpsTotalCountDto courseNpsReports = courseService.findNpsReport(paginationDto);
             return new ResponseEntity<>(courseNpsReports, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

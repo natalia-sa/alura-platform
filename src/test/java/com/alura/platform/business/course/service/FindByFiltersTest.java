@@ -1,6 +1,6 @@
 package com.alura.platform.business.course.service;
 
-import com.alura.platform.business.basic.PaginationDto;
+import com.alura.platform.business.basic.dto.PaginationDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
 import com.alura.platform.business.course.dto.CourseListTotalCountDto;
 import com.alura.platform.business.course.dto.CourseWithInstructorDataDto;

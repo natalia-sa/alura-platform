@@ -1,6 +1,6 @@
 package com.alura.platform.business.course.repository;
 
-import com.alura.platform.business.basic.PaginationDto;
+import com.alura.platform.business.basic.dto.PaginationDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import jakarta.persistence.EntityManager;

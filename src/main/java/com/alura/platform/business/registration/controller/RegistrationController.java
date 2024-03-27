@@ -1,6 +1,7 @@
 package com.alura.platform.business.registration.controller;
 
-import com.alura.platform.business.basic.IdDto;
+import com.alura.platform.business.basic.dto.ExceptionMessageDto;
+import com.alura.platform.business.basic.dto.IdDto;
 import com.alura.platform.business.registration.dto.RegistrationUserIdCourseIdDto;
 import com.alura.platform.business.registration.entity.Registration;
 import com.alura.platform.business.registration.service.RegistrationService;
@@ -44,9 +45,11 @@ public class RegistrationController {
             IdDto idDto = new IdDto(registration.getId());
             return new ResponseEntity<>(idDto, HttpStatus.CREATED);
         } catch (ActionDeniedException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
