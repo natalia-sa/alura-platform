@@ -1,6 +1,6 @@
 package com.alura.platform.business.security;
 
-import com.alura.platform.business.user.repository.UserRepository;
+import com.alura.platform.business.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,14 +21,14 @@ public class SecurityFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
         if(token != null) {
             var subject = tokenService.validateToken(token);
-            UserDetails user = userRepository.findByUsername(subject);
+            UserDetails user = userService.findByUsername(subject);
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

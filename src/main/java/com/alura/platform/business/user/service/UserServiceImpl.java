@@ -9,6 +9,7 @@ import com.alura.platform.exception.ActionDeniedException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserNameEmailRoleDto findByUsername(String username) {
+    public UserNameEmailRoleDto findNameEmailRoleByUsername(String username) {
         UserNameEmailRoleProjection userProjection = userRepository.findNameEmailRoleByUsername(username);
 
         if (userProjection == null) {
@@ -49,5 +50,10 @@ class UserServiceImpl implements UserService {
         }
 
         return new UserNameEmailRoleDto(userProjection);
+    }
+
+    @Override
+    public UserDetails findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

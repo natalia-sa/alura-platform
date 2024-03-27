@@ -38,12 +38,12 @@ class FindByUsernameTest extends BasicControllerTest {
         UserNameEmailRoleDto userDto = new UserNameEmailRoleDto("Joao Silva", "joao@gmail.com", UserRoleEnum.STUDENT);
         String expectedResponse = gson.toJson(userDto);
 
-        Mockito.when(this.userService.findByUsername(username)).thenReturn(userDto);
+        Mockito.when(this.userService.findNameEmailRoleByUsername(username)).thenReturn(userDto);
 
         MvcResult result = callEndpoint(username).andExpect(status().isOk()).andReturn();
         String response = result.getResponse().getContentAsString();
 
-        Mockito.verify(this.userService, Mockito.times(1)).findByUsername(username);
+        Mockito.verify(this.userService, Mockito.times(1)).findNameEmailRoleByUsername(username);
 
         Assertions.assertEquals(expectedResponse, response);
     }
@@ -64,7 +64,7 @@ class FindByUsernameTest extends BasicControllerTest {
         SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.ADMIN);
         String username = "joao";
 
-        Mockito.when(userService.findByUsername(username))
+        Mockito.when(userService.findNameEmailRoleByUsername(username))
                 .thenThrow(new NoSuchElementException("No user was found"));
 
         callEndpoint(username).andExpect(status().isNotFound());

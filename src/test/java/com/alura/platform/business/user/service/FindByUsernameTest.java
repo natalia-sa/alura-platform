@@ -31,7 +31,7 @@ class FindByUsernameTest {
 
         UserNameEmailRoleDto expectedUserDto = new UserNameEmailRoleDto(user2);
 
-        UserNameEmailRoleDto userFound = userService.findByUsername("joana");
+        UserNameEmailRoleDto userFound = userService.findNameEmailRoleByUsername("joana");
 
         Assertions.assertEquals(expectedUserDto, userFound);
     }
@@ -40,6 +40,6 @@ class FindByUsernameTest {
     @DisplayName("Should throw NotFoundException when user was not found")
     @Transactional
     void shouldThrowExceptionWhenUserWasNotFoundTest() {
-        Assertions.assertThrows(NoSuchElementException.class, () -> userService.findByUsername("ana"));
+        Assertions.assertThrows(NoSuchElementException.class, () -> userService.findNameEmailRoleByUsername("ana"));
     }
 }

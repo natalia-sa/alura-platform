@@ -66,7 +66,7 @@ public class UserController {
             String username
             ) {
         try {
-            UserNameEmailRoleDto userDto = userService.findByUsername(username);
+            UserNameEmailRoleDto userDto = userService.findNameEmailRoleByUsername(username);
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
