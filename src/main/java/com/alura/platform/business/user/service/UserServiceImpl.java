@@ -5,6 +5,7 @@ import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.projections.UserNameEmailRoleProjection;
 import com.alura.platform.business.user.repository.UserRepository;
+import com.alura.platform.exception.ActionDeniedException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 class UserServiceImpl implements UserService {
@@ -27,6 +29,12 @@ class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User save(UserDto userDto) {
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(userDto.username(), userDto.email());
+
+        if (userOptional.isPresent()) {
+            throw new ActionDeniedException("The chosen username or email is already in use");
+        }
+
         String encodedPassword = new BCryptPasswordEncoder().encode(userDto.password());
         User user = new User(userDto, encodedPassword);
         return userRepository.save(user);
