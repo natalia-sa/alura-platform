@@ -2,8 +2,8 @@ CREATE TABLE course_reviews
 (
     id            INT    PRIMARY KEY AUTO_INCREMENT,
     created_at    TIMESTAMP  NOT NULL DEFAULT NOW(),
-    user_id       BIGINT     NOT NULL,
-    course_id     BIGINT     NOT NULL,
+    user_id       INT     NOT NULL,
+    course_id     INT     NOT NULL,
     rating        INTEGER    NOT NULL,
     comment       TEXT,
 
