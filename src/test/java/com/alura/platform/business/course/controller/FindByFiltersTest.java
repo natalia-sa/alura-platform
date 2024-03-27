@@ -4,7 +4,7 @@ import com.alura.platform.basic.BasicControllerTest;
 import com.alura.platform.basic.SecurityContextTestUtils;
 import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
-import com.alura.platform.business.course.dto.CourseFilterResponseDto;
+import com.alura.platform.business.course.dto.CourseListTotalCountDto;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.course.service.CourseService;
 import com.alura.platform.business.user.enums.UserRoleEnum;
@@ -37,7 +37,7 @@ class FindByFiltersTest extends BasicControllerTest {
     @DisplayName("Should return 200 when listing courses")
     void shouldReturnSuccessWhenListingCoursesTest() throws Exception {
         SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.ADMIN);
-        CourseFilterResponseDto response = new CourseFilterResponseDto(List.of(), 0L);
+        CourseListTotalCountDto response = new CourseListTotalCountDto(List.of(), 0L);
 
         String expectedResponse = gson.toJson(response);
 

@@ -2,7 +2,7 @@ package com.alura.platform.business.course.service;
 
 import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
-import com.alura.platform.business.course.dto.CourseFilterResponseDto;
+import com.alura.platform.business.course.dto.CourseListTotalCountDto;
 import com.alura.platform.business.course.dto.CourseWithInstructorDataDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
@@ -57,7 +57,7 @@ class FindByFiltersTest {
         PaginationDto paginationDto = new PaginationDto(1, 5);
         CourseFilterDto filter = new CourseFilterDto(null, paginationDto);
 
-        CourseFilterResponseDto coursesFound = courseService.findByFilters(filter);
+        CourseListTotalCountDto coursesFound = courseService.findByFilters(filter);
         Assertions.assertEquals(3, coursesFound.totalCount());
         Assertions.assertTrue(coursesFound.courses().containsAll(expectedCourses));
     }
@@ -76,7 +76,7 @@ class FindByFiltersTest {
         PaginationDto paginationDto = new PaginationDto(1, 5);
         CourseFilterDto filter = new CourseFilterDto(CourseStatusEnum.ACTIVE, paginationDto);
 
-        CourseFilterResponseDto coursesFound = courseService.findByFilters(filter);
+        CourseListTotalCountDto coursesFound = courseService.findByFilters(filter);
         Assertions.assertEquals(2, coursesFound.totalCount());
         Assertions.assertTrue(coursesFound.courses().containsAll(expectedCourses));
     }
@@ -95,7 +95,7 @@ class FindByFiltersTest {
         PaginationDto paginationDto = new PaginationDto(1, 2);
         CourseFilterDto filter = new CourseFilterDto(null, paginationDto);
 
-        CourseFilterResponseDto coursesFound = courseService.findByFilters(filter);
+        CourseListTotalCountDto coursesFound = courseService.findByFilters(filter);
         Assertions.assertEquals(3, coursesFound.totalCount());
         Assertions.assertTrue(coursesFound.courses().containsAll(expectedCoursesInPage1));
     }

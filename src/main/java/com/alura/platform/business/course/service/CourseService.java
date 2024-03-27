@@ -4,8 +4,8 @@ import com.alura.platform.business.basic.BasicService;
 import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
-import com.alura.platform.business.course.dto.CourseFilterResponseDto;
-import com.alura.platform.business.course.dto.CourseNpsReportDto;
+import com.alura.platform.business.course.dto.CourseListTotalCountDto;
+import com.alura.platform.business.course.dto.CourseNpsTotalCountDto;
 import com.alura.platform.business.course.entity.Course;
 
 public interface CourseService extends BasicService<Course, Long> {
@@ -13,7 +13,7 @@ public interface CourseService extends BasicService<Course, Long> {
 
     void inactivate(String code);
 
-    CourseFilterResponseDto findByFilters(CourseFilterDto filter);
+    CourseListTotalCountDto findByFilters(CourseFilterDto filter);
 
-    CourseNpsReportDto findNpsReport(PaginationDto pagination);
+    CourseNpsTotalCountDto findNpsReport(PaginationDto pagination);
 }

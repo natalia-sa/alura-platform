@@ -1,10 +1,12 @@
 package com.alura.platform.business.course.controller;
 
+import com.alura.platform.business.basic.IdDto;
 import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.CourseDto;
 import com.alura.platform.business.course.dto.CourseFilterDto;
-import com.alura.platform.business.course.dto.CourseFilterResponseDto;
-import com.alura.platform.business.course.dto.CourseNpsReportDto;
+import com.alura.platform.business.course.dto.CourseListTotalCountDto;
+import com.alura.platform.business.course.dto.CourseNpsTotalCountDto;
+import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.course.service.CourseService;
 import com.alura.platform.exception.ActionDeniedException;
@@ -34,15 +36,18 @@ public class CourseController {
     @PostMapping(value = "")
     @Operation(summary = "Save new course")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Course created successfully"),
+            @ApiResponse(responseCode = "201", description = "Id of the saved entity",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IdDto.class))}),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating course") })
     public ResponseEntity save(
             @RequestBody
             @Valid
             CourseDto courseDto) {
         try {
-            courseService.save(courseDto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            Course course = courseService.save(courseDto);
+            IdDto id = new IdDto(course.getId());
+            return new ResponseEntity<>(id, HttpStatus.CREATED);
         } catch (ActionDeniedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
@@ -75,9 +80,9 @@ public class CourseController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Courses list returned successfully",
                     content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = CourseFilterResponseDto.class))) }),
+                            array = @ArraySchema(schema = @Schema(implementation = CourseListTotalCountDto.class))) }),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while listing courses") })
-    public ResponseEntity<CourseFilterResponseDto> findByFilters(
+    public ResponseEntity<CourseListTotalCountDto> findByFilters(
             @RequestParam(required = false)
             @Schema(example = "ACTIVE")
             CourseStatusEnum status,
@@ -94,7 +99,7 @@ public class CourseController {
         try {
             PaginationDto paginationDto = new PaginationDto(page, size);
             CourseFilterDto filtersDto = new CourseFilterDto(status, paginationDto);
-            CourseFilterResponseDto courses = courseService.findByFilters(filtersDto);
+            CourseListTotalCountDto courses = courseService.findByFilters(filtersDto);
             return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -107,9 +112,9 @@ public class CourseController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Courses nps information returned successfully",
                     content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = CourseNpsReportDto.class))) }),
+                            array = @ArraySchema(schema = @Schema(implementation = CourseNpsTotalCountDto.class))) }),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while listing courses nps information") })
-    public ResponseEntity<CourseNpsReportDto> findNpsReport(
+    public ResponseEntity<CourseNpsTotalCountDto> findNpsReport(
             @RequestParam
             @Schema(example = "1")
             @NotNull
@@ -122,7 +127,7 @@ public class CourseController {
     ) {
         try {
             PaginationDto paginationDto = new PaginationDto(page, size);
-            CourseNpsReportDto courseNpsReports = courseService.findNpsReport(paginationDto);
+            CourseNpsTotalCountDto courseNpsReports = courseService.findNpsReport(paginationDto);
             return new ResponseEntity<>(courseNpsReports, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

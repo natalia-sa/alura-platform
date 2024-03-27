@@ -3,7 +3,7 @@ package com.alura.platform.business.course.controller;
 import com.alura.platform.basic.BasicControllerTest;
 import com.alura.platform.basic.SecurityContextTestUtils;
 import com.alura.platform.business.basic.PaginationDto;
-import com.alura.platform.business.course.dto.CourseNpsReportDto;
+import com.alura.platform.business.course.dto.CourseNpsTotalCountDto;
 import com.alura.platform.business.course.service.CourseService;
 import com.alura.platform.business.user.enums.UserRoleEnum;
 import com.google.gson.Gson;
@@ -35,7 +35,7 @@ class FindNpsReportTest extends BasicControllerTest {
     @DisplayName("Should return 200 when listing courses nps information")
     void shouldReturnSuccessWhenListingCourseNpsInformationTest() throws Exception {
         SecurityContextTestUtils.fakeAuthentication(UserRoleEnum.ADMIN);
-        CourseNpsReportDto response = new CourseNpsReportDto(List.of(), 0L);
+        CourseNpsTotalCountDto response = new CourseNpsTotalCountDto(List.of(), 0L);
         PaginationDto paginationDto = new PaginationDto(1, 10);
 
         String expectedResponse = gson.toJson(response);

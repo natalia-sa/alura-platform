@@ -1,5 +1,6 @@
 package com.alura.platform.business.user.controller;
 
+import com.alura.platform.business.basic.IdDto;
 import com.alura.platform.business.user.dto.UserDto;
 import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.business.user.entity.User;
@@ -29,17 +30,20 @@ public class UserController {
     @PostMapping(value = "")
     @Operation(summary = "Save new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully"),
+            @ApiResponse(responseCode = "201", description = "Id of the saved entity",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IdDto.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid input",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating user") })
-    public ResponseEntity<User> save(
+    public ResponseEntity save(
             @RequestBody
             @Valid
             UserDto userDto) {
         try {
-            userService.save(userDto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            User user = userService.save(userDto);
+            IdDto idDto = new IdDto(user.getId());
+            return new ResponseEntity<>(idDto, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

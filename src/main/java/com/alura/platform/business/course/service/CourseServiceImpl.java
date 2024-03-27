@@ -60,7 +60,7 @@ class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseFilterResponseDto findByFilters(CourseFilterDto filter) {
+    public CourseListTotalCountDto findByFilters(CourseFilterDto filter) {
         List<Long> courseIds = courseFilterRepository.findIdByFilters(filter.status(), null, filter.pagination());
         Long count = courseFilterRepository.countByFilters(filter.status(), null);
 
@@ -72,11 +72,11 @@ class CourseServiceImpl implements CourseService {
                     return new CourseWithInstructorDataDto(course, instructor);})
                 .toList();
 
-        return new CourseFilterResponseDto(courses, count);
+        return new CourseListTotalCountDto(courses, count);
     }
 
     @Override
-    public CourseNpsReportDto findNpsReport(PaginationDto pagination) {
+    public CourseNpsTotalCountDto findNpsReport(PaginationDto pagination) {
         List<Long> courseIds = courseFilterRepository.findIdByFilters(null, true, pagination);
         Long count = courseFilterRepository.countByFilters(null, true);
 
@@ -87,7 +87,7 @@ class CourseServiceImpl implements CourseService {
                     return new CourseNpsDto(course);})
                 .toList();
 
-        return new CourseNpsReportDto(courses, count);
+        return new CourseNpsTotalCountDto(courses, count);
     }
 
 }

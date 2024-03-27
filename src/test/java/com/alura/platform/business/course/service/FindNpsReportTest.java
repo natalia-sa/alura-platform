@@ -2,7 +2,7 @@ package com.alura.platform.business.course.service;
 
 import com.alura.platform.business.basic.PaginationDto;
 import com.alura.platform.business.course.dto.CourseNpsDto;
-import com.alura.platform.business.course.dto.CourseNpsReportDto;
+import com.alura.platform.business.course.dto.CourseNpsTotalCountDto;
 import com.alura.platform.business.course.entity.Course;
 import com.alura.platform.business.course.enums.CourseStatusEnum;
 import com.alura.platform.business.user.entity.User;
@@ -50,7 +50,7 @@ class FindNpsReportTest {
                 new CourseNpsDto(course2),
                 new CourseNpsDto(course3));
 
-        CourseNpsReportDto courses = courseService.findNpsReport(paginationDto);
+        CourseNpsTotalCountDto courses = courseService.findNpsReport(paginationDto);
         Assertions.assertEquals(2, courses.totalCount());
         Assertions.assertTrue(courses.courses().containsAll(expected));
     }
