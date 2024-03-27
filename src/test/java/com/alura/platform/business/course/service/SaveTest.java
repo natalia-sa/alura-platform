@@ -60,6 +60,18 @@ class SaveTest {
         Assertions.assertThrows(ActionDeniedException.class, () -> courseService.save(courseDto));
     }
 
+    @Test
+    @DisplayName("Should throw ActionDeniedException when course code is already in use")
+    void shouldThrowActionDeniedExceptionWhenCourseCodeIsAlreadyInUseTest() {
+        CourseDto courseDto = makeCourseDto("course", "co-course", instructor.getId(), "the new course");
+
+        courseService.save(courseDto);
+
+        CourseDto courseDto2 = makeCourseDto("coursee", "co-course", instructor.getId(), "the other course");
+
+        Assertions.assertThrows(ActionDeniedException.class, () -> courseService.save(courseDto2));
+    }
+
     private CourseDto makeCourseDto(String name, String code, Long instructorId, String description) {
         return new CourseDto(name, code, instructorId, description);
     }

@@ -65,6 +65,15 @@ class CourseReviewServiceImpl implements CourseReviewService {
     private void validateSaveRequest(Course course, User user) {
         validateIfCourseIsActive(course);
         validateIfUserIsRegisteredInCourse(user.getId(), course.getId());
+        validateIfUserAlreadyReviewedCurse(user.getId(), course.getId());
+    }
+
+    private void validateIfUserAlreadyReviewedCurse(Long userId, Long courseId) {
+        Optional<CourseReview> courseReviewOptional = courseReviewRepository.findByUserIdAndCourseId(userId, courseId);
+
+        if(courseReviewOptional.isPresent()) {
+            throw new ActionDeniedException("User already reviewed this course");
+        }
     }
 
     private void validateIfCourseIsActive(Course course) {

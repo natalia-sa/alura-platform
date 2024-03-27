@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -16,4 +17,6 @@ public interface CourseReviewRepository extends JpaRepository<CourseReview, Long
             FROM CourseReview courseReview
             WHERE courseReview.course.id = :courseId""" )
     Set<CourseReview> findByCourseId(@Param("courseId") Long courseId);
+
+    Optional<CourseReview> findByUserIdAndCourseId(@Param("userId") Long userId, @Param("courseId") Long courseId);
 }

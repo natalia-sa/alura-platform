@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 class CourseServiceImpl implements CourseService {
@@ -38,14 +39,32 @@ class CourseServiceImpl implements CourseService {
     @Override
     public Course save(CourseDto courseDto) {
         User user = userService.findById(courseDto.instructorId()).orElseThrow();
+
+        validateSaveRequest(user, courseDto);
+
+        Course course = new Course(courseDto.name(), courseDto.code(), user, courseDto.description(), CourseStatusEnum.ACTIVE);
+        return courseRepository.save(course);
+    }
+
+    private void validateSaveRequest(User user, CourseDto courseDto) {
+        validateIfUserIsInstructor(user);
+        validateIfCourseCodeAlreadyExists(courseDto);
+    }
+
+    private void validateIfCourseCodeAlreadyExists(CourseDto courseDto) {
+        Optional<Course> courseOptional = courseRepository.findByCode(courseDto.code());
+
+        if(courseOptional.isPresent()) {
+            throw new ActionDeniedException("This course code is already in use");
+        }
+    }
+
+    private void validateIfUserIsInstructor(User user) {
         boolean isUserInstructor = checkIfUserIsInstructor(user);
 
         if(!isUserInstructor) {
             throw new ActionDeniedException("User is not instructor");
         }
-
-        Course course = new Course(courseDto.name(), courseDto.code(), user, courseDto.description(), CourseStatusEnum.ACTIVE);
-        return courseRepository.save(course);
     }
 
     private boolean checkIfUserIsInstructor(User user) {

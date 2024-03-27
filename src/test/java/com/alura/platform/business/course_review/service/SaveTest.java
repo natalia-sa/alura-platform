@@ -97,6 +97,17 @@ class SaveTest {
     }
 
     @Test
+    @DisplayName("Should throw ActionDeniedException when user already reviewed course")
+    void shouldThrowActionDeniedExceptionWhenUserAlreadyReviewedCourseTest() {
+        CourseReviewDto courseReviewDto = new CourseReviewDto(user.getId(), course.getId(), 8, "great");
+        courseReviewService.save(courseReviewDto);
+
+        CourseReviewDto courseReviewDto2 = new CourseReviewDto(user.getId(), course.getId(), 8, "great");
+
+        Assertions.assertThrows(ActionDeniedException.class, () -> courseReviewService.save(courseReviewDto2));
+    }
+
+    @Test
     @DisplayName("Should update course nps after saving new course review")
     void shouldUpdateCourseNpsTest() {
         CourseReviewDto courseReviewDto1 = new CourseReviewDto(user.getId(), course.getId(), 9, "great");

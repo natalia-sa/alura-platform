@@ -6,6 +6,7 @@ import com.alura.platform.business.user.dto.UserDto;
 import com.alura.platform.business.user.dto.UserNameEmailRoleDto;
 import com.alura.platform.business.user.entity.User;
 import com.alura.platform.business.user.service.UserService;
+import com.alura.platform.exception.ActionDeniedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,6 +37,7 @@ public class UserController {
                             schema = @Schema(implementation = IdDto.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid input",
                     content = @Content),
+            @ApiResponse(responseCode = "403", description = "Action denied"),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating user") })
     public ResponseEntity save(
             @RequestBody
@@ -45,9 +47,11 @@ public class UserController {
             User user = userService.save(userDto);
             IdDto idDto = new IdDto(user.getId());
             return new ResponseEntity<>(idDto, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (ActionDeniedException e) {
             ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -72,8 +76,7 @@ public class UserController {
             ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

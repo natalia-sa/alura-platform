@@ -68,6 +68,20 @@ class SaveTest {
         Assertions.assertThrows(ActionDeniedException.class, () -> registrationService.save(registrationDto));
     }
 
+    @Test
+    @DisplayName("Should throw ActionDeniedException when user is already registered in course")
+    void shouldThrowActionDeniedExceptionWhenUserIsAlreadyRegisteredTest() {
+        User user = makeUser("newuser", "user2@gmail.com", UserRoleEnum.STUDENT);
+        Course course = makeCourse(CourseStatusEnum.ACTIVE);
+
+        RegistrationUserIdCourseIdDto registrationDto = new RegistrationUserIdCourseIdDto(user.getId(), course.getId());
+        registrationService.save(registrationDto);
+
+        RegistrationUserIdCourseIdDto registrationDto2 = new RegistrationUserIdCourseIdDto(user.getId(), course.getId());
+
+        Assertions.assertThrows(ActionDeniedException.class, () -> registrationService.save(registrationDto2));
+    }
+
     private User makeUser(String username, String email, UserRoleEnum role) {
         return userService.save(new User("name", username, email, "password", role));
     }

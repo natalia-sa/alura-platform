@@ -12,7 +12,6 @@ import com.alura.platform.exception.ActionDeniedException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -40,19 +39,36 @@ class RegistrationServiceImpl implements RegistrationService {
         User user = userService.findById(dto.userId()).orElseThrow();
         Course course = courseService.findById(dto.courseId()).orElseThrow();
 
-        boolean isCourseActive = checkIfCourseIsActive(course);
-
-        if(!isCourseActive) {
-            throw new ActionDeniedException("Course is inactive");
-        }
+        validateSaveRequest(course, dto);
 
         Registration registration = new Registration(user, course);
         return registrationRepository.save(registration);
     }
 
+    private void validateSaveRequest(Course course, RegistrationUserIdCourseIdDto registrationDto)  {
+        validateIfCourseIsActive(course);
+        validateIfUserIsAlreadyRegisteredInCourse(registrationDto);
+    }
+
+    private void validateIfUserIsAlreadyRegisteredInCourse(RegistrationUserIdCourseIdDto dto) {
+        Optional<Registration> registrationOptional = registrationRepository.findByUserIdAndCourseId(dto.userId(), dto.courseId());
+
+        if(registrationOptional.isPresent()) {
+            throw new ActionDeniedException("User is already registered in this course");
+        }
+    }
+
+    private void validateIfCourseIsActive(Course course) {
+        boolean isCourseActive = checkIfCourseIsActive(course);
+
+        if(!isCourseActive) {
+            throw new ActionDeniedException("Course is inactive");
+        }
+    }
+
     @Override
     public Optional<Registration> findByUserIdCourseId(Long userId, Long courseId) {
-        return registrationRepository.findByUserIdCourseId(userId, courseId);
+        return registrationRepository.findByUserIdAndCourseId(userId, courseId);
     }
 
     private boolean checkIfCourseIsActive(Course course) {

@@ -35,6 +35,7 @@ public class RegistrationController {
             @ApiResponse(responseCode = "201", description = "Id of the saved entity",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = IdDto.class))}),
+            @ApiResponse(responseCode = "403", description = "Action denied"),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating registration") })
     public ResponseEntity save(
             @RequestBody
@@ -48,8 +49,7 @@ public class RegistrationController {
             ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
             return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
         } catch (Exception e) {
-            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

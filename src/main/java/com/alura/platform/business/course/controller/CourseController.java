@@ -40,6 +40,7 @@ public class CourseController {
             @ApiResponse(responseCode = "201", description = "Id of the saved entity",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = IdDto.class))}),
+            @ApiResponse(responseCode = "403", description = "Action denied"),
             @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating course") })
     public ResponseEntity save(
             @RequestBody
@@ -53,8 +54,7 @@ public class CourseController {
             ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
             return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
         } catch (Exception e) {
-            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -73,8 +73,7 @@ public class CourseController {
             courseService.inactivate(code);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,8 +105,7 @@ public class CourseController {
             CourseListTotalCountDto courses = courseService.findByFilters(filtersDto);
             return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (Exception e) {
-            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -135,8 +133,7 @@ public class CourseController {
             CourseNpsTotalCountDto courseNpsReports = courseService.findNpsReport(paginationDto);
             return new ResponseEntity<>(courseNpsReports, HttpStatus.OK);
         } catch (Exception e) {
-            ExceptionMessageDto message = new ExceptionMessageDto(e.getMessage());
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
